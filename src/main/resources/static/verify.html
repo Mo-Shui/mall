@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>验证码测试</title>
+</head>
+<body>
+<img src="/kaptcha" onclick="this.src='/kaptcha?d='+new Date()*1"/>
+<br>
+<input type="text" maxlength="5" id="code" placeholder="请输入验证码"/>
+<button id="verify">验证</button>
+<br>
+<p id="verifyResult">
+</p>
+</body>
+<!-- 下方地址为字节跳动提供的jQuery cdn地址 -->
+<script src="https://s3.pstatp.com/cdn/expire-1-M/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        // 验证按钮的点击事件
+        $('#verify').click(function () {
+            var code = $('#code').val();
+            $.ajax({
+                type: 'GET', // 方法类型
+                url: '/verify?code=' + code,
+                success: function (result) {
+                    // 将验证结果显示在p标签中
+                    $('#verifyResult').html(result);
+                },
+                error: function () {
+                    alert('请求失败');
+                },
+            });
+        });
+    });
+</script>
+</html>
