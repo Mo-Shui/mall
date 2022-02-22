@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moshui.mall.dao.CarouselMapper">
+    <resultMap id="BaseResultMap" type="com.moshui.mall.entity.Carousel">
+        <id property="carouselId" column="carousel_id"/>
+        <result property="carouselUrl" column="carousel_url"/>
+        <result property="redirectUrl" column="redirect_url"/>
+        <result property="carouselRank" column="carousel_rank"/>
+        <result property="isDeleted" column="is_deleted"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createUser" column="create_user"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="updateUser" column="update_user"/>
+    </resultMap>
+
+    <!--查询分页数据-->
+    <select id="findCarouselList" parameterType="Map" resultMap="BaseResultMap">
+        select
+        *
+        from
+        tb_newbee_mall_carousel
+        where
+        is_deleted = 0
+        order by carousel_rank desc
+        <if test="start != null and limit != null">
+            limit #{start},#{limit}
+        </if>
+    </select>
+
+    <!--查询总数-->
+    <select id="getTotalCarousels" resultType="int">
+        select count(*)
+        from tb_newbee_mall_carousel
+        where is_deleted = 0
+    </select>
+
+    <!--根据id查找-->
+    <select id="findById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select *
+        from tb_newbee_mall_carousel
+        where carousel_id = #{id}
+    </select>
+
+    <!--查询固定数量的记录-->
+    <select id="findCarouselListByNumber" parameterType="int" resultMap="BaseResultMap">
+        select *
+        from tb_newbee_mall_carousel
+        where is_deleted = 0
+        order by carousel_rank desc
+            limit #{value}
+    </select>
+
+    <!--根据轮播图id删除-->
+    <delete id="deleteById" parameterType="int">
+        delete
+        from tb_newbee_mall_carousel
+        where carousel_id = #{value}
+    </delete>
+
+    <!--批量删除-->
+    <update id="deleteBatch">
+        update tb_newbee_mall_carousel
+        set is_deleted = 1, update_time = now()
+        where carousel_id in
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <!--增加新的轮播图-->
+    <insert id="insert" parameterType="com.moshui.mall.entity.Carousel">
+        insert into tb_newbee_mall_carousel
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="carouselId != null">
+                carousel_id,
+            </if>
+            <if test="carouselUrl != null">
+                carousel_url,
+            </if>
+            <if test="redirectUrl != null">
+                redirect_url,
+            </if>
+            <if test="carouselRank != null">
+                carousel_rank,
+            </if>
+            <if test="isDeleted != null">
+                is_deleted,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="createUser != null">
+                create_user,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="updateUser != null">
+                update_user,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="carouselId != null">
+                #{carouselId,jdbcType=INTEGER},
+            </if>
+            <if test="carouselUrl != null">
+                #{carouselUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="redirectUrl != null">
+                #{redirectUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="carouselRank != null">
+                #{carouselRank,jdbcType=INTEGER},
+            </if>
+            <if test="isDeleted != null">
+                #{isDeleted,jdbcType=TINYINT},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createUser != null">
+                #{createUser,jdbcType=INTEGER},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null">
+                #{updateUser,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+
+    <!--修改-->
+    <update id="update" parameterType="com.moshui.mall.entity.Carousel">
+        update tb_newbee_mall_carousel
+        <set>
+            <if test="carouselUrl != null">
+                carousel_url = #{carouselUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="redirectUrl != null">
+                redirect_url = #{redirectUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="carouselRank != null">
+                carousel_rank = #{carouselRank,jdbcType=INTEGER},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted,jdbcType=TINYINT},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createUser != null">
+                create_user = #{createUser,jdbcType=INTEGER},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null">
+                update_user = #{updateUser,jdbcType=INTEGER},
+            </if>
+        </set>
+        where carousel_id = #{carouselId,jdbcType=INTEGER}
+    </update>
+</mapper>
