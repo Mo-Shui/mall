@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>wangEditor 富文本编辑器测试</title>
+</head>
+<body>
+<br>
+wangEditor 富文本编辑器：
+<br>
+<div id="wangEditor"></div>
+<br>
+<input type="button" onclick="getContent()" value="获取文档内容"/>
+</body>
+<script
+        type="text/javascript"
+        src="https://unpkg.com/wangeditor/dist/wangEditor.min.js"
+></script>
+<script type="text/javascript">
+    // 初始化富文本编辑器 start
+
+    const E = window.wangEditor;
+    const editorD = new E("#wangEditor");
+    // 设置编辑区域高度为 640px
+    editorD.config.height = 640;
+    // 配置服务端图片上传地址
+    editorD.config.uploadImgServer = "/admin/upload/files";
+    editorD.config.uploadFileName = "files";
+    // 限制图片大小 2M
+    editorD.config.uploadImgMaxSize = 2 * 1024 * 1024;
+    // 限制一次最多能传几张图片 一次最多上传 5 个图片
+    editorD.config.uploadImgMaxLength = 5;
+    // 隐藏插入网络图片的功能
+    editorD.config.showLinkImg = false;
+    editorD.create();
+
+    function getContent() {
+        var content = editorD.txt.html();
+        alert(content);
+    }
+</script>
+</html>
