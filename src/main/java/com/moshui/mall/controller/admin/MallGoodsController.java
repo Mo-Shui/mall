@@ -33,6 +33,7 @@ public class MallGoodsController {
     @Resource
     private MallGoodsService mallGoodsService;
 
+    //编辑商品信息页面
     @RequestMapping("/goods/edit")
     public String edit(HttpServletRequest request){
         request.setAttribute("path","edit");
