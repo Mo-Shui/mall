@@ -8,7 +8,7 @@
  */
 package com.moshui.mall.controller.common;
 
-import com.moshui.mall.common.NewBeeMallException;
+import com.moshui.mall.common.MallException;
 import com.moshui.mall.util.Result;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -27,7 +27,7 @@ public class NewBeeMallExceptionHandler {
         Result result = new Result();
         result.setResultCode(500);
         //区分是否为自定义异常
-        if (e instanceof NewBeeMallException) {
+        if (e instanceof MallException) {
             result.setMessage(e.getMessage());
         } else {
             e.printStackTrace();
