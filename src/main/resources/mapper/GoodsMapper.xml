@@ -18,6 +18,8 @@
         <result column="update_user" jdbcType="INTEGER" property="updateUser"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
     </resultMap>
+
+    <!--添加商品-->
     <insert id="insertSelective" parameterType="com.moshui.mall.entity.Goods">
         insert into tb_newbee_mall_goods_info
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -121,4 +123,89 @@
             </if>
         </trim>
     </insert>
+
+    <!--根据id获取商品-->
+    <select id="selectByPrimaryKey" parameterType="long" resultMap="BaseResultMap">
+        select * from tb_newbee_mall_goods_info where goods_id = #{value}
+    </select>
+
+    <!--修改商品-->
+    <update id="updateByPrimaryKeySelective" parameterType="com.moshui.mall.entity.Goods">
+        update tb_newbee_mall_goods_info
+        <set>
+            <if test="goodsName != null">
+                goods_name = #{goodsName,jdbcType=VARCHAR},
+            </if>
+            <if test="goodsIntro != null">
+                goods_intro = #{goodsIntro,jdbcType=VARCHAR},
+            </if>
+            <if test="goodsCategoryId != null">
+                goods_category_id = #{goodsCategoryId,jdbcType=BIGINT},
+            </if>
+            <if test="goodsCoverImg != null">
+                goods_cover_img = #{goodsCoverImg,jdbcType=VARCHAR},
+            </if>
+            <if test="goodsCarousel != null">
+                goods_carousel = #{goodsCarousel,jdbcType=VARCHAR},
+            </if>
+            <if test="originalPrice != null">
+                original_price = #{originalPrice,jdbcType=INTEGER},
+            </if>
+            <if test="sellingPrice != null">
+                selling_price = #{sellingPrice,jdbcType=INTEGER},
+            </if>
+            <if test="stockNum != null">
+                stock_num = #{stockNum,jdbcType=INTEGER},
+            </if>
+            <if test="tag != null">
+                tag = #{tag,jdbcType=VARCHAR},
+            </if>
+            <if test="goodsSellStatus != null">
+                goods_sell_status = #{goodsSellStatus,jdbcType=TINYINT},
+            </if>
+            <if test="createUser != null">
+                create_user = #{createUser,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null">
+                update_user = #{updateUser,jdbcType=INTEGER},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="goodsDetailContent != null">
+                goods_detail_content = #{goodsDetailContent,jdbcType=LONGVARCHAR},
+            </if>
+        </set>
+        where goods_id = #{goodsId,jdbcType=BIGINT}
+    </update>
+
+    <!--列表-->
+    <select id="findMallGoodsList" parameterType="map" resultMap="BaseResultMap">
+        select
+            *
+        from
+            tb_newbee_mall_goods_info
+        order by goods_id desc
+        <if test="start != null and limit != null">
+            limit #{start},#{limit}
+        </if>
+    </select>
+
+    <!--获取商品总数-->
+    <select id="getTotalMallGoods" parameterType="map" resultType="int">
+        select count(*) from tb_newbee_mall_goods_info
+    </select>
+
+    <!--批量修改销售状态-->
+    <update id="batchUpdateSellStatus">
+        update tb_newbee_mall_goods_info
+        set goods_sell_status = #{sellStatus}, update_time = now()
+        where goods_id in
+            <foreach collection="ids" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+    </update>
 </mapper>
