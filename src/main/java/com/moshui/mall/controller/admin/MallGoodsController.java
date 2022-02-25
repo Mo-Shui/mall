@@ -2,11 +2,14 @@ package com.moshui.mall.controller.admin;
 
 import com.moshui.mall.common.Constants;
 import com.moshui.mall.common.MallCategoryLevelEnum;
+import com.moshui.mall.common.MallException;
 import com.moshui.mall.common.ServiceResultEnum;
+import com.moshui.mall.controller.vo.MallGoodsDetailVO;
 import com.moshui.mall.entity.Goods;
 import com.moshui.mall.entity.GoodsCategory;
 import com.moshui.mall.service.MallCategoryService;
 import com.moshui.mall.service.MallGoodsService;
+import com.moshui.mall.util.BeanUtil;
 import com.moshui.mall.util.PageQueryUtil;
 import com.moshui.mall.util.Result;
 import com.moshui.mall.util.ResultGenerator;
@@ -197,6 +200,25 @@ public class MallGoodsController {
             return ResultGenerator.genSuccessResult();
         }
         return ResultGenerator.genFailResult("修改失败");
+    }
+
+    //获取商品的详细信息
+    @RequestMapping("/goods/detail/{goodsId}")
+    public String detail(HttpServletRequest request,@PathVariable("goodsId")Long goodsId){
+        if (goodsId < 1) {
+            MallException.fail("参数异常");
+        }
+
+        Goods goods = mallGoodsService.getMallGoodsById(goodsId);
+        if (Constants.SELL_STATUS_UP != goods.getGoodsSellStatus()) {
+            MallException.fail(ServiceResultEnum.GOODS_PUT_DOWN.getResult());
+        }
+
+        MallGoodsDetailVO goodsDetailVO = new MallGoodsDetailVO();
+        BeanUtil.copyProperties(goods, goodsDetailVO);
+        goodsDetailVO.setGoodsCarouselList(goods.getGoodsCarousel().split(","));
+        request.setAttribute("goodsDetail", goodsDetailVO);
+        return "/mall/detail";
     }
 
 }

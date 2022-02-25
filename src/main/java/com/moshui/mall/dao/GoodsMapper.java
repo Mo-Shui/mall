@@ -24,4 +24,7 @@ public interface GoodsMapper {
 
     //批量修改销售状态
     int batchUpdateSellStatus(Long[] ids, int sellStatus);
+
+    //根据多个id获取商品
+    List<Goods> selectByPrimaryKeys(List<Long> goodsIds);
 }

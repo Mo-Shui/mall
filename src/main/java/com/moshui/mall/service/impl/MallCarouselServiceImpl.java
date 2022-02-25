@@ -65,4 +65,10 @@ public class MallCarouselServiceImpl implements MallCarouselService {
         }
         return carouselMapper.deleteBatch(ids) > 0;
     }
+
+    //返回固定数量的轮播图对象(首页调用)
+    @Override
+    public List<Carousel> getCarouselsForIndex(int indexCarouselNumber) {
+        return carouselMapper.findCarouselListByNumber(indexCarouselNumber);
+    }
 }

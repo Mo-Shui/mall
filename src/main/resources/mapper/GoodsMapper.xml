@@ -208,4 +208,21 @@
                 #{id}
             </foreach>
     </update>
+
+    <!--根据多个id获取商品-->
+    <select id="selectByPrimaryKeys" resultMap="BaseResultMap">
+        select
+            *
+        from
+            tb_newbee_mall_goods_info
+        where goods_id in
+            <foreach item="id" collection="goodsIds" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        order by field(goods_id,
+            <foreach item="id" collection="goodsIds" separator=",">
+                #{id}
+            </foreach>
+            );
+    </select>
 </mapper>

@@ -1,10 +1,12 @@
 package com.moshui.mall.service;
 
+import com.moshui.mall.controller.vo.IndexCategoryVO;
 import com.moshui.mall.entity.GoodsCategory;
 import com.moshui.mall.util.PageQueryUtil;
 import com.moshui.mall.util.PageResult;
 
 import java.util.List;
+import java.util.Locale;
 
 public interface MallCategoryService {
     //列表
@@ -24,4 +26,7 @@ public interface MallCategoryService {
 
     //根据id获取
     GoodsCategory getGoodsCategoryById(Long categoryId);
+
+    //获取主页的分类数据
+    List<IndexCategoryVO> getCategoriesForIndex();
 }
