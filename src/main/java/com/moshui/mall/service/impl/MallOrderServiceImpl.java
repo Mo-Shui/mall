@@ -9,6 +9,7 @@ import com.moshui.mall.dao.MallShoppingCartItemMapper;
 import com.moshui.mall.entity.Goods;
 import com.moshui.mall.entity.MallOrder;
 import com.moshui.mall.entity.MallOrderItem;
+import com.moshui.mall.entity.StockNumDTO;
 import com.moshui.mall.service.MallOrderService;
 import com.moshui.mall.util.BeanUtil;
 import com.moshui.mall.util.NumberUtil;
@@ -19,10 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @Transactional
@@ -209,6 +207,84 @@ public class MallOrderServiceImpl implements MallOrderService {
 
         PageResult pageResult = new PageResult(mallOrderListVOS,total, pageQueryUtil.getLimit(), pageQueryUtil.getPage());
         return pageResult;
+    }
+
+    //取消订单
+    @Override
+    public String cancelOrder(String orderNo, Long userId) {
+        MallOrder newBeeMallOrder = mallOrderMapper.selectByOrderNo(orderNo);
+        if (newBeeMallOrder != null) {
+            //验证是否是当前userId下的订单，否则报错
+            if (!userId.equals(newBeeMallOrder.getUserId())) {
+                MallException.fail(ServiceResultEnum.NO_PERMISSION_ERROR.getResult());
+            }
+            //订单状态判断
+            if (newBeeMallOrder.getOrderStatus().intValue() == MallOrderStatusEnum.ORDER_SUCCESS.getOrderStatus()
+                    || newBeeMallOrder.getOrderStatus().intValue() == MallOrderStatusEnum.ORDER_CLOSED_BY_MALLUSER.getOrderStatus()
+                    || newBeeMallOrder.getOrderStatus().intValue() == MallOrderStatusEnum.ORDER_CLOSED_BY_EXPIRED.getOrderStatus()
+                    || newBeeMallOrder.getOrderStatus().intValue() == MallOrderStatusEnum.ORDER_CLOSED_BY_JUDGE.getOrderStatus()) {
+                return ServiceResultEnum.ORDER_STATUS_ERROR.getResult();
+            }
+            if (mallOrderMapper.closeOrder(Collections.singletonList(newBeeMallOrder.getOrderId()), MallOrderStatusEnum.ORDER_CLOSED_BY_MALLUSER.getOrderStatus()) > 0) {
+                return ServiceResultEnum.SUCCESS.getResult();
+            } else {
+                return ServiceResultEnum.DB_ERROR.getResult();
+            }
+        }
+        return ServiceResultEnum.ORDER_NOT_EXIST_ERROR.getResult();
+    }
+
+    //确认订单
+    @Override
+    public String finishOrder(String orderNo, Long userId) {
+        MallOrder newBeeMallOrder = mallOrderMapper.selectByOrderNo(orderNo);
+        if (newBeeMallOrder != null) {
+            //验证是否是当前userId下的订单，否则报错
+            if (!userId.equals(newBeeMallOrder.getUserId())) {
+                return ServiceResultEnum.NO_PERMISSION_ERROR.getResult();
+            }
+            //订单状态判断 非出库状态下不进行修改操作
+            if (newBeeMallOrder.getOrderStatus().intValue() != MallOrderStatusEnum.ORDER_EXPRESS.getOrderStatus()) {
+                return ServiceResultEnum.ORDER_STATUS_ERROR.getResult();
+            }
+            newBeeMallOrder.setOrderStatus((byte) MallOrderStatusEnum.ORDER_SUCCESS.getOrderStatus());
+            newBeeMallOrder.setUpdateTime(new Date());
+            if (mallOrderMapper.updateByPrimaryKeySelective(newBeeMallOrder) > 0) {
+                return ServiceResultEnum.SUCCESS.getResult();
+            } else {
+                return ServiceResultEnum.DB_ERROR.getResult();
+            }
+        }
+        return ServiceResultEnum.ORDER_NOT_EXIST_ERROR.getResult();
+    }
+
+    //获取订单详情
+    @Override
+    public MallOrder getMallOrderByOrderNo(String orderNo) {
+        return mallOrderMapper.selectByOrderNo(orderNo);
+    }
+
+    //支付成功
+    @Override
+    public String paySuccess(String orderNo, int payType) {
+        MallOrder newBeeMallOrder = mallOrderMapper.selectByOrderNo(orderNo);
+        if (newBeeMallOrder != null) {
+            //订单状态判断 非待支付状态下不进行修改操作
+            if (newBeeMallOrder.getOrderStatus().intValue() != MallOrderStatusEnum.ORDER_PRE_PAY.getOrderStatus()) {
+                return ServiceResultEnum.ORDER_STATUS_ERROR.getResult();
+            }
+            newBeeMallOrder.setOrderStatus((byte) MallOrderStatusEnum.ORDER_PAID.getOrderStatus());
+            newBeeMallOrder.setPayType((byte) payType);
+            newBeeMallOrder.setPayStatus((byte) PayStatusEnum.PAY_SUCCESS.getPayStatus());
+            newBeeMallOrder.setPayTime(new Date());
+            newBeeMallOrder.setUpdateTime(new Date());
+            if (mallOrderMapper.updateByPrimaryKeySelective(newBeeMallOrder) > 0) {
+                return ServiceResultEnum.SUCCESS.getResult();
+            } else {
+                return ServiceResultEnum.DB_ERROR.getResult();
+            }
+        }
+        return ServiceResultEnum.ORDER_NOT_EXIST_ERROR.getResult();
     }
 
 }

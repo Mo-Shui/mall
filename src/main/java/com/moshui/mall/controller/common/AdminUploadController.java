@@ -9,7 +9,7 @@
 package com.moshui.mall.controller.common;
 
 import com.moshui.mall.common.Constants;
-import com.moshui.mall.util.NewBeeMallUtils;
+import com.moshui.mall.util.MallUtils;
 import com.moshui.mall.util.Result;
 import com.moshui.mall.util.ResultGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +60,7 @@ public class AdminUploadController {
             }
             file.transferTo(destFile);
             Result resultSuccess = ResultGenerator.genSuccessResult();
-            resultSuccess.setData(NewBeeMallUtils.getHost(new URI(httpServletRequest.getRequestURL() + "")) + "/upload/" + newFileName);
+            resultSuccess.setData(MallUtils.getHost(new URI(httpServletRequest.getRequestURL() + "")) + "/upload/" + newFileName);
             return resultSuccess;
         } catch (IOException e) {
             e.printStackTrace();
@@ -111,7 +111,7 @@ public class AdminUploadController {
                     }
                 }
                 multipartFiles.get(i).transferTo(destFile);
-                fileNames.add(NewBeeMallUtils.getHost(new URI(httpServletRequest.getRequestURL() + "")) + "/upload/" + newFileName);
+                fileNames.add(MallUtils.getHost(new URI(httpServletRequest.getRequestURL() + "")) + "/upload/" + newFileName);
             } catch (IOException e) {
                 e.printStackTrace();
                 return ResultGenerator.genFailResult("文件上传失败");

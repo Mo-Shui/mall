@@ -99,4 +99,42 @@
         </trim>
     </insert>
 
+    <select id="selectByPrimaryKey" parameterType="long" resultMap="BaseResultMap">
+        select
+        *
+        from tb_newbee_mall_user
+        where user_id = #{userId,jdbcType=BIGINT} and is_deleted = 0
+    </select>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.moshui.mall.entity.MallUser">
+        update tb_newbee_mall_user
+        <set>
+            <if test="nickName != null">
+                nick_name = #{nickName,jdbcType=VARCHAR},
+            </if>
+            <if test="loginName != null">
+                login_name = #{loginName,jdbcType=VARCHAR},
+            </if>
+            <if test="passwordMd5 != null">
+                password_md5 = #{passwordMd5,jdbcType=VARCHAR},
+            </if>
+            <if test="introduceSign != null">
+                introduce_sign = #{introduceSign,jdbcType=VARCHAR},
+            </if>
+            <if test="address != null">
+                address = #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted,jdbcType=TINYINT},
+            </if>
+            <if test="lockedFlag != null">
+                locked_flag = #{lockedFlag,jdbcType=TINYINT},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where user_id = #{userId,jdbcType=BIGINT}
+    </update>
+
 </mapper>

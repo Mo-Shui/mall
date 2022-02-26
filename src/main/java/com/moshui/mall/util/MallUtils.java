@@ -7,7 +7,7 @@ import java.net.URI;
 /**
  * @author 13
  */
-public class NewBeeMallUtils {
+public class MallUtils {
 
     public static URI getHost(URI uri) {
         URI effectiveURI = null;

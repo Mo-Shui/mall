@@ -13,4 +13,8 @@ public interface MallUserMapper {
     //添加用户
     int insertSelective(MallUser mallUser);
 
+    MallUser selectByPrimaryKey(Long userId);
+
+    int updateByPrimaryKeySelective(MallUser mallUser);
+
 }

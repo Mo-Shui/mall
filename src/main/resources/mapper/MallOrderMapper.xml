@@ -175,4 +175,58 @@
             limit #{start},#{limit}
         </if>
     </select>
+
+    <!--取消订单-->
+    <update id="closeOrder">
+        update tb_newbee_mall_order
+        set order_status = #{orderStatus},update_time = now()
+        where order_id in
+        <foreach collection="orderIds" item="item" index="index"
+                 open="(" separator="," close=")">#{item}
+        </foreach>
+    </update>
+
+    <!--确认订单，更新订单-->
+    <update id="updateByPrimaryKeySelective" parameterType="com.moshui.mall.entity.MallOrder">
+        update tb_newbee_mall_order
+        <set>
+            <if test="orderNo != null">
+                order_no = #{orderNo,jdbcType=VARCHAR},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=BIGINT},
+            </if>
+            <if test="totalPrice != null">
+                total_price = #{totalPrice,jdbcType=INTEGER},
+            </if>
+            <if test="payStatus != null">
+                pay_status = #{payStatus,jdbcType=TINYINT},
+            </if>
+            <if test="payType != null">
+                pay_type = #{payType,jdbcType=TINYINT},
+            </if>
+            <if test="payTime != null">
+                pay_time = #{payTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="orderStatus != null">
+                order_status = #{orderStatus,jdbcType=TINYINT},
+            </if>
+            <if test="extraInfo != null">
+                extra_info = #{extraInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="userAddress != null">
+                user_address = #{userAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted,jdbcType=TINYINT},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where order_id = #{orderId,jdbcType=BIGINT}
+    </update>
 </mapper>

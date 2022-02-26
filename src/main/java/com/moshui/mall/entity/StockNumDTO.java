@@ -1,4 +1,4 @@
-package com.moshui.mall.controller.vo;
+package com.moshui.mall.entity;
 
 //库存修改所需实体
 public class StockNumDTO {

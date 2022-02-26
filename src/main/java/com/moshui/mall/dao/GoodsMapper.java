@@ -1,6 +1,6 @@
 package com.moshui.mall.dao;
 
-import com.moshui.mall.controller.vo.StockNumDTO;
+import com.moshui.mall.entity.StockNumDTO;
 import com.moshui.mall.entity.Goods;
 import com.moshui.mall.util.PageQueryUtil;
 import org.apache.ibatis.annotations.Param;

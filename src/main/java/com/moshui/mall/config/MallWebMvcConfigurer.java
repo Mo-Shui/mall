@@ -1,6 +1,7 @@
 package com.moshui.mall.config;
 
 import com.moshui.mall.interceptor.AdminLoginInterceptor;
+import com.moshui.mall.interceptor.MallCartNumberInterceptor;
 import com.moshui.mall.interceptor.MallLoginInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +17,9 @@ public class MallWebMvcConfigurer implements WebMvcConfigurer {
 
     @Autowired
     private MallLoginInterceptor mallLoginInterceptor;
+
+    @Autowired
+    private MallCartNumberInterceptor mallCartNumberInterceptor;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -44,6 +48,12 @@ public class MallWebMvcConfigurer implements WebMvcConfigurer {
                 .addPathPatterns("/personal/updateInfo")
                 .addPathPatterns("/selectPayType")
                 .addPathPatterns("/payPage");
+        // 购物车中的数量统一处理
+        registry.addInterceptor(mallCartNumberInterceptor)
+                .excludePathPatterns("/admin/**")
+                .excludePathPatterns("/register")
+                .excludePathPatterns("/login")
+                .excludePathPatterns("/logout");
     }
 
     @Override
