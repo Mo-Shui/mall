@@ -20,4 +20,7 @@ public interface MallGoodsService {
 
     //批量修改销售状态
     boolean batchUpdateSellStatus(Long[] ids, int sellStatus);
+
+    //搜索数据列表
+    PageResult searchMallGoods(PageQueryUtil pageQueryUtil);
 }

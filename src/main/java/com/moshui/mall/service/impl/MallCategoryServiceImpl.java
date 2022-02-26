@@ -4,6 +4,7 @@ import com.moshui.mall.common.Constants;
 import com.moshui.mall.common.MallCategoryLevelEnum;
 import com.moshui.mall.common.ServiceResultEnum;
 import com.moshui.mall.controller.vo.IndexCategoryVO;
+import com.moshui.mall.controller.vo.SearchPageCategoryVO;
 import com.moshui.mall.controller.vo.SecondLevelCategoryVO;
 import com.moshui.mall.controller.vo.ThirdLevelCategoryVO;
 import com.moshui.mall.dao.GoodsCategoryMapper;
@@ -141,6 +142,25 @@ public class MallCategoryServiceImpl implements MallCategoryService {
         }else{
             return null;
         }
+    }
+
+    //根据分类id获取分类（搜索用）
+    @Override
+    public SearchPageCategoryVO getCategoriesForSearch(Long categoryId) {
+        SearchPageCategoryVO searchPageCategoryVO = new SearchPageCategoryVO();
+
+        GoodsCategory thirdGoodsCategory = goodsCategoryMapper.selectByPrimaryKey(categoryId);
+        if (thirdGoodsCategory != null && thirdGoodsCategory.getCategoryLevel() == MallCategoryLevelEnum.LEVEL_THREE.getLevel()){
+            GoodsCategory secondGoodsCategory = goodsCategoryMapper.selectByPrimaryKey(thirdGoodsCategory.getParentId());
+            if (secondGoodsCategory != null && secondGoodsCategory.getCategoryLevel() == MallCategoryLevelEnum.LEVEL_TWO.getLevel()){
+                List<GoodsCategory> thirdGoodsCategoryList = goodsCategoryMapper.selectByLevelAndParentIdsAndNumber(Collections.singletonList(secondGoodsCategory.getCategoryId()), MallCategoryLevelEnum.LEVEL_THREE.getLevel(), Constants.SEARCH_CATEGORY_NUMBER);
+                searchPageCategoryVO.setCurrentCategoryName(thirdGoodsCategory.getCategoryName());
+                searchPageCategoryVO.setSecondLevelCategoryName(secondGoodsCategory.getCategoryName());
+                searchPageCategoryVO.setThirdLevelCategoryList(thirdGoodsCategoryList);
+                return searchPageCategoryVO;
+            }
+        }
+        return null;
     }
 
     //根据parentId将categories分组

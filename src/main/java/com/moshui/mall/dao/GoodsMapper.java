@@ -27,4 +27,11 @@ public interface GoodsMapper {
 
     //根据多个id获取商品
     List<Goods> selectByPrimaryKeys(List<Long> goodsIds);
+
+    //根据搜索获取列表
+    List<Goods> findMallGoodsListBySearch(PageQueryUtil pageQueryUtil);
+
+    //根据搜索获取总数
+    int getTotalMallGoodsBySearch(PageQueryUtil pageQueryUtil);
+
 }

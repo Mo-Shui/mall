@@ -63,4 +63,30 @@ public class MallGoodsServiceImpl implements MallGoodsService {
         return goodsMapper.batchUpdateSellStatus(ids,sellStatus) > 0;
     }
 
+    //搜索数据列表
+    @Override
+    public PageResult searchMallGoods(PageQueryUtil pageQueryUtil) {
+        List<Goods> mallGoodsList = goodsMapper.findMallGoodsListBySearch(pageQueryUtil);
+        int totalMallGoods = goodsMapper.getTotalMallGoodsBySearch(pageQueryUtil);
+
+        if (mallGoodsList != null){
+            for (Goods goods : mallGoodsList) {
+                String goodsName = goods.getGoodsName();
+                String goodsIntro = goods.getGoodsIntro();
+                // 字符串过长导致文字超出的问题
+                if (goodsName.length() > 28) {
+                    goodsName = goodsName.substring(0, 28) + "...";
+                    goods.setGoodsName(goodsName);
+                }
+                if (goodsIntro.length() > 30) {
+                    goodsIntro = goodsIntro.substring(0, 30) + "...";
+                    goods.setGoodsIntro(goodsIntro);
+                }
+            }
+        }
+
+        PageResult pageResult = new PageResult(mallGoodsList,totalMallGoods, pageQueryUtil.getLimit(), pageQueryUtil.getPage());
+        return pageResult;
+    }
+
 }

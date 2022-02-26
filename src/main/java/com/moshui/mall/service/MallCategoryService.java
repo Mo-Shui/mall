@@ -1,6 +1,7 @@
 package com.moshui.mall.service;
 
 import com.moshui.mall.controller.vo.IndexCategoryVO;
+import com.moshui.mall.controller.vo.SearchPageCategoryVO;
 import com.moshui.mall.entity.GoodsCategory;
 import com.moshui.mall.util.PageQueryUtil;
 import com.moshui.mall.util.PageResult;
@@ -29,4 +30,7 @@ public interface MallCategoryService {
 
     //获取主页的分类数据
     List<IndexCategoryVO> getCategoriesForIndex();
+
+    //根据分类id获取分类（搜索用）
+    SearchPageCategoryVO getCategoriesForSearch(Long categoryId);
 }
