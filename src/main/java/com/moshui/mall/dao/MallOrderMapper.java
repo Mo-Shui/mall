@@ -25,4 +25,13 @@ public interface MallOrderMapper {
 
     //确认订单，更新订单
     int updateByPrimaryKeySelective(MallOrder newBeeMallOrder);
+
+    //根据id查询
+    MallOrder selectByPrimaryKey(Long orderId);
+
+    List<MallOrder> selectByPrimaryKeys(@Param("orderIds") List<Long> orderIds);
+
+    int checkDone(@Param("orderIds") List<Long> asList);
+
+    int checkOut(@Param("orderIds") List<Long> orderIds);
 }

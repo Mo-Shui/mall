@@ -7,17 +7,18 @@ import com.moshui.mall.dao.MallShoppingCartItemMapper;
 import com.moshui.mall.dao.MallUserMapper;
 import com.moshui.mall.entity.MallUser;
 import com.moshui.mall.service.MallUserService;
-import com.moshui.mall.util.BeanUtil;
-import com.moshui.mall.util.MD5Util;
-import com.moshui.mall.util.MallUtils;
+import com.moshui.mall.util.*;
 import org.apache.tomcat.util.bcel.Const;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.util.StringUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Service
+@Transactional
 public class MallUserServiceImpl implements MallUserService {
 
     @Resource
@@ -93,6 +94,22 @@ public class MallUserServiceImpl implements MallUserService {
             }
         }
         return null;
+    }
+
+    @Override
+    public PageResult getMallUsersPage(PageQueryUtil pageUtil) {
+        List<MallUser> mallUsers = mallUserMapper.findMallUserList(pageUtil);
+        int total = mallUserMapper.getTotalMallUsers(pageUtil);
+        PageResult pageResult = new PageResult(mallUsers, total, pageUtil.getLimit(), pageUtil.getPage());
+        return pageResult;
+    }
+
+    @Override
+    public boolean lockUsers(Integer[] ids, int lockStatus) {
+        if (ids.length < 1) {
+            return false;
+        }
+        return mallUserMapper.lockUserBatch(ids, lockStatus) > 0;
     }
 
 }

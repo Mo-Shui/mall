@@ -15,25 +15,19 @@
 
     <!--根据用户名和加密后的密码查询用户-->
     <select id="selectByLoginNameAndPasswd" resultMap="BaseResultMap">
-        SELECT
-            *
-        FROM
-            tb_newbee_mall_user
-        WHERE
-            login_name = #{loginName}
-            AND password_md5 = #{passwordMD5}
-            AND is_deleted = 0
+        SELECT *
+        FROM tb_newbee_mall_user
+        WHERE login_name = #{loginName}
+          AND password_md5 = #{passwordMD5}
+          AND is_deleted = 0
     </select>
 
     <!--根据用户名查询是否有相同名称的用户-->
     <select id="selectByLoginName" resultMap="BaseResultMap" parameterType="string">
-        SELECT
-            *
-        FROM
-            tb_newbee_mall_user
-        WHERE
-            login_name = #{loginName}
-            AND is_deleted = 0
+        SELECT *
+        FROM tb_newbee_mall_user
+        WHERE login_name = #{loginName}
+          AND is_deleted = 0
     </select>
 
     <!--添加用户-->
@@ -100,10 +94,10 @@
     </insert>
 
     <select id="selectByPrimaryKey" parameterType="long" resultMap="BaseResultMap">
-        select
-        *
+        select *
         from tb_newbee_mall_user
-        where user_id = #{userId,jdbcType=BIGINT} and is_deleted = 0
+        where user_id = #{userId,jdbcType=BIGINT}
+          and is_deleted = 0
     </select>
 
     <update id="updateByPrimaryKeySelective" parameterType="com.moshui.mall.entity.MallUser">
@@ -135,6 +129,36 @@
             </if>
         </set>
         where user_id = #{userId,jdbcType=BIGINT}
+    </update>
+
+    <select id="findMallUserList" parameterType="map" resultMap="BaseResultMap">
+        select
+        *
+        from tb_newbee_mall_user
+        where 1=1
+        <if test="loginName!=null and loginName!=''">
+            and login_name = #{loginName}
+        </if>
+        order by create_time desc
+        <if test="start!=null and limit!=null">
+            limit #{start},#{limit}
+        </if>
+    </select>
+
+    <select id="getTotalMallUsers" parameterType="map" resultType="int">
+        select count(*) from tb_newbee_mall_user
+        where 1=1
+        <if test="loginName!=null and loginName!=''">
+            and login_name = #{loginName}
+        </if>
+    </select>
+
+    <update id="lockUserBatch">
+        update tb_newbee_mall_user
+        set locked_flag=#{lockStatus} where user_id in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
     </update>
 
 </mapper>

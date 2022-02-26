@@ -1,6 +1,10 @@
 package com.moshui.mall.dao;
 
 import com.moshui.mall.entity.MallUser;
+import com.moshui.mall.util.PageQueryUtil;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface MallUserMapper {
 
@@ -17,4 +21,9 @@ public interface MallUserMapper {
 
     int updateByPrimaryKeySelective(MallUser mallUser);
 
+    List<MallUser> findMallUserList(PageQueryUtil pageUtil);
+
+    int getTotalMallUsers(PageQueryUtil pageUtil);
+
+    int lockUserBatch(@Param("ids") Integer[] ids, @Param("lockStatus") int lockStatus);
 }
