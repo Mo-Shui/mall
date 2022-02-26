@@ -1,7 +1,9 @@
 package com.moshui.mall.dao;
 
+import com.moshui.mall.controller.vo.StockNumDTO;
 import com.moshui.mall.entity.Goods;
 import com.moshui.mall.util.PageQueryUtil;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -34,4 +36,6 @@ public interface GoodsMapper {
     //根据搜索获取总数
     int getTotalMallGoodsBySearch(PageQueryUtil pageQueryUtil);
 
+    //修改库存
+    int updateStockNum(@Param("stockNumDTOS") List<StockNumDTO> stockNumDTOS);
 }

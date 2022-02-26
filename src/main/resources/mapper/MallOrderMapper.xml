@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moshui.mall.dao.MallOrderMapper">
+    <resultMap id="BaseResultMap" type="com.moshui.mall.entity.MallOrder">
+        <id column="order_id" jdbcType="BIGINT" property="orderId"/>
+        <result column="order_no" jdbcType="VARCHAR" property="orderNo"/>
+        <result column="user_id" jdbcType="BIGINT" property="userId"/>
+        <result column="total_price" jdbcType="INTEGER" property="totalPrice"/>
+        <result column="pay_status" jdbcType="TINYINT" property="payStatus"/>
+        <result column="pay_type" jdbcType="TINYINT" property="payType"/>
+        <result column="pay_time" jdbcType="TIMESTAMP" property="payTime"/>
+        <result column="order_status" jdbcType="TINYINT" property="orderStatus"/>
+        <result column="extra_info" jdbcType="VARCHAR" property="extraInfo"/>
+        <result column="user_address" jdbcType="VARCHAR" property="userAddress"/>
+        <result column="is_deleted" jdbcType="TINYINT" property="isDeleted"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+    <!--保存订单-->
+    <insert id="insertSelective" useGeneratedKeys="true" keyProperty="orderId"
+            parameterType="com.moshui.mall.entity.MallOrder">
+        insert into tb_newbee_mall_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">
+                order_id,
+            </if>
+            <if test="orderNo != null">
+                order_no,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="totalPrice != null">
+                total_price,
+            </if>
+            <if test="payStatus != null">
+                pay_status,
+            </if>
+            <if test="payType != null">
+                pay_type,
+            </if>
+            <if test="payTime != null">
+                pay_time,
+            </if>
+            <if test="orderStatus != null">
+                order_status,
+            </if>
+            <if test="extraInfo != null">
+                extra_info,
+            </if>
+            <if test="userAddress != null">
+                user_address,
+            </if>
+            <if test="isDeleted != null">
+                is_deleted,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">
+                #{orderId,jdbcType=BIGINT},
+            </if>
+            <if test="orderNo != null">
+                #{orderNo,jdbcType=VARCHAR},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=BIGINT},
+            </if>
+            <if test="totalPrice != null">
+                #{totalPrice,jdbcType=INTEGER},
+            </if>
+            <if test="payStatus != null">
+                #{payStatus,jdbcType=TINYINT},
+            </if>
+            <if test="payType != null">
+                #{payType,jdbcType=TINYINT},
+            </if>
+            <if test="payTime != null">
+                #{payTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="orderStatus != null">
+                #{orderStatus,jdbcType=TINYINT},
+            </if>
+            <if test="extraInfo != null">
+                #{extraInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="userAddress != null">
+                #{userAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="isDeleted != null">
+                #{isDeleted,jdbcType=TINYINT},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+    <!--根据订单号查询订单-->
+    <select id="selectByOrderNo" parameterType="string" resultMap="BaseResultMap">
+        select
+        *
+        from tb_newbee_mall_order
+        where order_no = #{orderNo,jdbcType=VARCHAR} and is_deleted=0
+        limit 1
+    </select>
+
+    <!--获取订单总数-->
+    <select id="getTotalMallOrders" parameterType="map" resultType="int">
+        select count(*) from tb_newbee_mall_order
+        <where>
+            <if test="orderNo!=null and orderNo!=''">
+                and order_no = #{orderNo}
+            </if>
+            <if test="userId!=null and userId!=''">
+                and user_id = #{userId}
+            </if>
+            <if test="payType!=null and payType!=''">
+                and pay_type = #{payType}
+            </if>
+            <if test="orderStatus!=null and orderStatus!=''">
+                and order_status = #{orderStatus}
+            </if>
+            <if test="isDeleted!=null and isDeleted!=''">
+                and is_deleted = #{isDeleted}
+            </if>
+            <if test="startTime != null and startTime.trim() != ''">
+                and create_time &gt; #{startTime}
+            </if>
+            <if test="endTime != null and endTime.trim() != ''">
+                and create_time &lt; #{endTime}
+            </if>
+        </where>
+    </select>
+
+    <!--获取订单数据-->
+    <select id="findMallOrderList" parameterType="map" resultMap="BaseResultMap">
+        select
+        *
+        from tb_newbee_mall_order
+        <where>
+            <if test="orderNo!=null and orderNo!=''">
+                and order_no = #{orderNo}
+            </if>
+            <if test="userId!=null and userId!=''">
+                and user_id = #{userId}
+            </if>
+            <if test="payType!=null and payType!=''">
+                and pay_type = #{payType}
+            </if>
+            <if test="orderStatus!=null and orderStatus!=''">
+                and order_status = #{orderStatus}
+            </if>
+            <if test="isDeleted!=null and isDeleted!=''">
+                and is_deleted = #{isDeleted}
+            </if>
+            <if test="startTime != null and startTime.trim() != ''">
+                and create_time &gt; #{startTime}
+            </if>
+            <if test="endTime != null and endTime.trim() != ''">
+                and create_time &lt; #{endTime}
+            </if>
+        </where>
+        order by create_time desc
+        <if test="start!=null and limit!=null">
+            limit #{start},#{limit}
+        </if>
+    </select>
+</mapper>

@@ -126,7 +126,9 @@
 
     <!--根据id获取商品-->
     <select id="selectByPrimaryKey" parameterType="long" resultMap="BaseResultMap">
-        select * from tb_newbee_mall_goods_info where goods_id = #{value}
+        select *
+        from tb_newbee_mall_goods_info
+        where goods_id = #{value}
     </select>
 
     <!--修改商品-->
@@ -185,9 +187,9 @@
     <!--列表-->
     <select id="findMallGoodsList" parameterType="map" resultMap="BaseResultMap">
         select
-            *
+        *
         from
-            tb_newbee_mall_goods_info
+        tb_newbee_mall_goods_info
         order by goods_id desc
         <if test="start != null and limit != null">
             limit #{start},#{limit}
@@ -196,7 +198,8 @@
 
     <!--获取商品总数-->
     <select id="getTotalMallGoods" parameterType="map" resultType="int">
-        select count(*) from tb_newbee_mall_goods_info
+        select count(*)
+        from tb_newbee_mall_goods_info
     </select>
 
     <!--批量修改销售状态-->
@@ -204,34 +207,34 @@
         update tb_newbee_mall_goods_info
         set goods_sell_status = #{sellStatus}, update_time = now()
         where goods_id in
-            <foreach collection="ids" item="id" open="(" separator="," close=")">
-                #{id}
-            </foreach>
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
     </update>
 
     <!--根据多个id获取商品-->
     <select id="selectByPrimaryKeys" resultMap="BaseResultMap">
         select
-            *
+        *
         from
-            tb_newbee_mall_goods_info
+        tb_newbee_mall_goods_info
         where goods_id in
-            <foreach item="id" collection="goodsIds" open="(" separator="," close=")">
-                #{id}
-            </foreach>
+        <foreach item="id" collection="goodsIds" open="(" separator="," close=")">
+            #{id}
+        </foreach>
         order by field(goods_id,
-            <foreach item="id" collection="goodsIds" separator=",">
-                #{id}
-            </foreach>
-            );
+        <foreach item="id" collection="goodsIds" separator=",">
+            #{id}
+        </foreach>
+        );
     </select>
 
     <!--根据搜索获取列表-->
     <select id="findMallGoodsListBySearch" parameterType="map" resultMap="BaseResultMap">
         select
-            *
+        *
         from
-            tb_newbee_mall_goods_info
+        tb_newbee_mall_goods_info
         <where>
             <if test="keyword!=null and keyword!=''">
                 and (goods_name like CONCAT('%',#{keyword},'%') or goods_intro like CONCAT('%',#{keyword},'%'))
@@ -279,4 +282,12 @@
             </if>
         </where>
     </select>
+
+    <!--修改库存-->
+    <update id="updateStockNum">
+        <foreach collection="stockNumDTOS" item="stockNumDTO">
+            update tb_newbee_mall_goods_info set stock_num = stock_num-#{stockNumDTO.goodsCount}
+            where goods_id = #{stockNumDTO.goodsId} and stock_num>=#{stockNumDTO.goodsCount} and goods_sell_status = 0;
+        </foreach>
+    </update>
 </mapper>

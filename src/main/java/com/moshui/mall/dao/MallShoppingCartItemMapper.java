@@ -27,4 +27,7 @@ public interface MallShoppingCartItemMapper {
 
     //删除
     int deleteByPrimaryKey(Long mallShoppingCartItemId);
+
+    //根据购物项id删除购物项
+    int deleteBatch(List<Long> cartItemIds);
 }

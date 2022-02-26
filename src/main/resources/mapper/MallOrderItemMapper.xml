@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moshui.mall.dao.MallOrderItemMapper">
+    <resultMap id="BaseResultMap" type="com.moshui.mall.entity.MallOrderItem">
+        <id column="order_item_id" jdbcType="BIGINT" property="orderItemId"/>
+        <result column="order_id" jdbcType="BIGINT" property="orderId"/>
+        <result column="goods_id" jdbcType="BIGINT" property="goodsId"/>
+        <result column="goods_name" jdbcType="VARCHAR" property="goodsName"/>
+        <result column="goods_cover_img" jdbcType="VARCHAR" property="goodsCoverImg"/>
+        <result column="selling_price" jdbcType="INTEGER" property="sellingPrice"/>
+        <result column="goods_count" jdbcType="INTEGER" property="goodsCount"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+    </resultMap>
+
+    <!--保存订单项到数据库-->
+    <insert id="insertBatch" parameterType="com.moshui.mall.entity.MallOrderItem">
+        insert into tb_newbee_mall_order_item (order_id, goods_id,
+        goods_name, goods_cover_img, selling_price,
+        goods_count)
+        values
+        <foreach collection="orderItems" item="orderItem" separator=",">
+            (#{orderItem.orderId,jdbcType=BIGINT}, #{orderItem.goodsId,jdbcType=BIGINT},
+            #{orderItem.goodsName,jdbcType=VARCHAR}, #{orderItem.goodsCoverImg,jdbcType=VARCHAR},
+            #{orderItem.sellingPrice,jdbcType=INTEGER},
+            #{orderItem.goodsCount,jdbcType=INTEGER})
+        </foreach>
+    </insert>
+
+    <!--根据订单id查询其下的订单项-->
+    <select id="selectByOrderId" parameterType="long" resultMap="BaseResultMap">
+        select
+        *
+        from tb_newbee_mall_order_item
+        where order_id = #{orderItemId,jdbcType=BIGINT}
+    </select>
+
+    <!--根据多个订单id获取其下的订单项-->
+    <select id="selectByOrderIds" resultMap="BaseResultMap">
+        select
+        *
+        from tb_newbee_mall_order_item
+        where order_id
+        in
+        <foreach item="id" collection="orderIds" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+</mapper>
