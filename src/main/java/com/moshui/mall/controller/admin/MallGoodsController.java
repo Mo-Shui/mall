@@ -202,23 +202,4 @@ public class MallGoodsController {
         return ResultGenerator.genFailResult("修改失败");
     }
 
-    //获取商品的详细信息
-    @RequestMapping("/goods/detail/{goodsId}")
-    public String detail(HttpServletRequest request,@PathVariable("goodsId")Long goodsId){
-        if (goodsId < 1) {
-            MallException.fail("参数异常");
-        }
-
-        Goods goods = mallGoodsService.getMallGoodsById(goodsId);
-        if (Constants.SELL_STATUS_UP != goods.getGoodsSellStatus()) {
-            MallException.fail(ServiceResultEnum.GOODS_PUT_DOWN.getResult());
-        }
-
-        MallGoodsDetailVO goodsDetailVO = new MallGoodsDetailVO();
-        BeanUtil.copyProperties(goods, goodsDetailVO);
-        goodsDetailVO.setGoodsCarouselList(goods.getGoodsCarousel().split(","));
-        request.setAttribute("goodsDetail", goodsDetailVO);
-        return "/mall/detail";
-    }
-
 }

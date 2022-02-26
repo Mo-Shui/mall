@@ -2,9 +2,11 @@ package com.moshui.mall.service.impl;
 
 import com.moshui.mall.common.Constants;
 import com.moshui.mall.common.ServiceResultEnum;
+import com.moshui.mall.controller.vo.MallUserVO;
 import com.moshui.mall.dao.MallUserMapper;
 import com.moshui.mall.entity.MallUser;
 import com.moshui.mall.service.MallUserService;
+import com.moshui.mall.util.BeanUtil;
 import com.moshui.mall.util.MD5Util;
 import org.apache.tomcat.util.bcel.Const;
 import org.springframework.stereotype.Service;
@@ -34,7 +36,9 @@ public class MallUserServiceImpl implements MallUserService {
                 mallUser.setNickName(tempNickName);
             }
 
-            session.setAttribute(Constants.MALL_USER_SESSION_KEY,mallUser);
+            MallUserVO mallUserVO = new MallUserVO();
+            BeanUtil.copyProperties(mallUser, mallUserVO);
+            session.setAttribute(Constants.MALL_USER_SESSION_KEY,mallUserVO);
 
             return ServiceResultEnum.SUCCESS.getResult();
         }

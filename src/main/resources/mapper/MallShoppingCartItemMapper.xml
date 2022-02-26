@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moshui.mall.dao.MallShoppingCartItemMapper">
+    <resultMap id="BaseResultMap" type="com.moshui.mall.entity.MallShoppingCartItem">
+        <id column="cart_item_id" jdbcType="BIGINT" property="cartItemId"/>
+        <result column="user_id" jdbcType="BIGINT" property="userId"/>
+        <result column="goods_id" jdbcType="BIGINT" property="goodsId"/>
+        <result column="goods_count" jdbcType="INTEGER" property="goodsCount"/>
+        <result column="is_deleted" jdbcType="TINYINT" property="isDeleted"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+    <!--根据用户id和商品id查询购物车项-->
+    <select id="selectByUserIdAndGoodsId" resultMap="BaseResultMap">
+        select
+            *
+        from
+            tb_newbee_mall_shopping_cart_item
+        where user_id = #{newBeeMallUserId,jdbcType=BIGINT} and goods_id=#{goodsId,jdbcType=BIGINT} and is_deleted = 0
+        limit 1
+    </select>
+    
+    <!--根据用户id查询该用户的购物车项数量-->
+    <select id="selectCountByUserId" parameterType="long" resultType="int">
+        select
+            count(*)
+        from tb_newbee_mall_shopping_cart_item
+        where user_id = #{newBeeMallUserId,jdbcType=BIGINT} and is_deleted = 0
+    </select>
+
+    <!--添加-->
+    <insert id="insertSelective" parameterType="com.moshui.mall.entity.MallShoppingCartItem">
+        insert into tb_newbee_mall_shopping_cart_item
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="cartItemId != null">
+                cart_item_id,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="goodsId != null">
+                goods_id,
+            </if>
+            <if test="goodsCount != null">
+                goods_count,
+            </if>
+            <if test="isDeleted != null">
+                is_deleted,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="cartItemId != null">
+                #{cartItemId,jdbcType=BIGINT},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=BIGINT},
+            </if>
+            <if test="goodsId != null">
+                #{goodsId,jdbcType=BIGINT},
+            </if>
+            <if test="goodsCount != null">
+                #{goodsCount,jdbcType=INTEGER},
+            </if>
+            <if test="isDeleted != null">
+                #{isDeleted,jdbcType=TINYINT},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+    <!--根据userId和number字段获取固定数量的购物项列表数据-->
+    <select id="selectByUserId" resultMap="BaseResultMap">
+        select
+            *
+        from tb_newbee_mall_shopping_cart_item
+        where user_id = #{newBeeMallUserId,jdbcType=BIGINT} and is_deleted = 0
+        limit #{number}
+    </select>
+
+    <!--根据购物项id查询购物项-->
+    <select id="selectByPrimaryKey" parameterType="long" resultMap="BaseResultMap">
+        select
+            *
+        from tb_newbee_mall_shopping_cart_item
+        where cart_item_id = #{cartItemId,jdbcType=BIGINT} and is_deleted = 0
+    </select>
+
+    <!--修改-->
+    <update id="updateByPrimaryKeySelective" parameterType="com.moshui.mall.entity.MallShoppingCartItem">
+        update tb_newbee_mall_shopping_cart_item
+        <set>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=BIGINT},
+            </if>
+            <if test="goodsId != null">
+                goods_id = #{goodsId,jdbcType=BIGINT},
+            </if>
+            <if test="goodsCount != null">
+                goods_count = #{goodsCount,jdbcType=INTEGER},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted,jdbcType=TINYINT},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where cart_item_id = #{cartItemId,jdbcType=BIGINT}
+    </update>
+
+    <!--删除-->
+    <update id="deleteByPrimaryKey" parameterType="long">
+        update tb_newbee_mall_shopping_cart_item set is_deleted = 1
+        where cart_item_id = #{cartItemId,jdbcType=BIGINT} and is_deleted = 0
+    </update>
+
+</mapper>
