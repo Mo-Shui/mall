@@ -61,7 +61,7 @@ public class MallWebMvcConfigurer implements WebMvcConfigurer {
         //文件拦截映射
         //将/upload路径的映射到D:\Workspace\NewIDEA\mall-image\
         registry.addResourceHandler("/upload/**")
-                .addResourceLocations("file:D:\\Workspace\\NewIDEA\\mall-image\\");
+                .addResourceLocations("http://r7wzwmtgl.hn-bkt.clouddn.com/");
 //        registry.addResourceHandler("/goods-img/**")
 //                .addResourceLocations("file:D:\\Workspace\\NewIDEA\\mall-image\\");
     }

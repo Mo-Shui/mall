@@ -1,15 +1,8 @@
-/**
- * 严肃声明：
- * 开源版本请务必保留此注释头信息，若删除我方将保留所有法律责任追究！
- * 本系统已申请软件著作权，受国家版权局知识产权以及国家计算机软件著作权保护！
- * 可正常分享和学习源码，不得用于违法犯罪活动，违者必究！
- * Copyright (c) 2019-2020 十三 all rights reserved.
- * 版权所有，侵权必究！
- */
 package com.moshui.mall.controller.common;
 
 import com.moshui.mall.common.Constants;
 import com.moshui.mall.util.MallUtils;
+import com.moshui.mall.util.QiniuUtils;
 import com.moshui.mall.util.Result;
 import com.moshui.mall.util.ResultGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,20 +42,22 @@ public class AdminUploadController {
         StringBuilder tempName = new StringBuilder();
         tempName.append(sdf.format(new Date())).append(r.nextInt(100)).append(suffixName);
         String newFileName = tempName.toString();
-        File fileDirectory = new File(Constants.FILE_UPLOAD_DIC);
+//        File fileDirectory = new File(Constants.FILE_UPLOAD_DIC);
         //创建文件
-        File destFile = new File(Constants.FILE_UPLOAD_DIC + newFileName);
+//        File destFile = new File(Constants.FILE_UPLOAD_DIC + newFileName);
         try {
-            if (!fileDirectory.exists()) {
-                if (!fileDirectory.mkdir()) {
-                    throw new IOException("文件夹创建失败,路径为：" + fileDirectory);
-                }
-            }
-            file.transferTo(destFile);
+//            if (!fileDirectory.exists()) {
+//                if (!fileDirectory.mkdir()) {
+//                    throw new IOException("文件夹创建失败,路径为：" + fileDirectory);
+//                }
+//            }
+//            file.transferTo(destFile);
+            QiniuUtils.upload2Qiniu(file.getBytes(),newFileName);
             Result resultSuccess = ResultGenerator.genSuccessResult();
-            resultSuccess.setData(MallUtils.getHost(new URI(httpServletRequest.getRequestURL() + "")) + "/upload/" + newFileName);
+//            resultSuccess.setData(MallUtils.getHost(new URI(httpServletRequest.getRequestURL() + "")) + "/upload/" + newFileName);
+            resultSuccess.setData("http://r7wzwmtgl.hn-bkt.clouddn.com/" + newFileName);
             return resultSuccess;
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return ResultGenerator.genFailResult("文件上传失败");
         }
@@ -101,18 +96,20 @@ public class AdminUploadController {
             StringBuilder tempName = new StringBuilder();
             tempName.append(sdf.format(new Date())).append(r.nextInt(100)).append(suffixName);
             String newFileName = tempName.toString();
-            File fileDirectory = new File(Constants.FILE_UPLOAD_DIC);
+//            File fileDirectory = new File(Constants.FILE_UPLOAD_DIC);
             //创建文件
-            File destFile = new File(Constants.FILE_UPLOAD_DIC + newFileName);
+//            File destFile = new File(Constants.FILE_UPLOAD_DIC + newFileName);
             try {
-                if (!fileDirectory.exists()) {
-                    if (!fileDirectory.mkdir()) {
-                        throw new IOException("文件夹创建失败,路径为：" + fileDirectory);
-                    }
-                }
-                multipartFiles.get(i).transferTo(destFile);
-                fileNames.add(MallUtils.getHost(new URI(httpServletRequest.getRequestURL() + "")) + "/upload/" + newFileName);
-            } catch (IOException e) {
+//                if (!fileDirectory.exists()) {
+//                    if (!fileDirectory.mkdir()) {
+//                        throw new IOException("文件夹创建失败,路径为：" + fileDirectory);
+//                    }
+//                }
+//                multipartFiles.get(i).transferTo(destFile);
+                QiniuUtils.upload2Qiniu(multipartFiles.get(i).getBytes(),newFileName);
+//                fileNames.add(MallUtils.getHost(new URI(httpServletRequest.getRequestURL() + "")) + "/upload/" + newFileName);
+                fileNames.add("http://r7wzwmtgl.hn-bkt.clouddn.com/" + newFileName);
+            } catch (Exception e) {
                 e.printStackTrace();
                 return ResultGenerator.genFailResult("文件上传失败");
             }
