@@ -14,7 +14,7 @@
 
     <!--保存订单项到数据库-->
     <insert id="insertBatch" parameterType="com.moshui.mall.entity.MallOrderItem">
-        insert into tb_newbee_mall_order_item (order_id, goods_id,
+        insert into tb_mall_order_item (order_id, goods_id,
         goods_name, goods_cover_img, selling_price,
         goods_count)
         values
@@ -30,7 +30,7 @@
     <select id="selectByOrderId" parameterType="long" resultMap="BaseResultMap">
         select
         *
-        from tb_newbee_mall_order_item
+        from tb_mall_order_item
         where order_id = #{orderItemId,jdbcType=BIGINT}
     </select>
 
@@ -38,7 +38,7 @@
     <select id="selectByOrderIds" resultMap="BaseResultMap">
         select
         *
-        from tb_newbee_mall_order_item
+        from tb_mall_order_item
         where order_id
         in
         <foreach item="id" collection="orderIds" open="(" separator="," close=")">

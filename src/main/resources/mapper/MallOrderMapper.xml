@@ -20,7 +20,7 @@
     <!--保存订单-->
     <insert id="insertSelective" useGeneratedKeys="true" keyProperty="orderId"
             parameterType="com.moshui.mall.entity.MallOrder">
-        insert into tb_newbee_mall_order
+        insert into tb_mall_order
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="orderId != null">
                 order_id,
@@ -109,14 +109,14 @@
     <select id="selectByOrderNo" parameterType="string" resultMap="BaseResultMap">
         select
         *
-        from tb_newbee_mall_order
+        from tb_mall_order
         where order_no = #{orderNo,jdbcType=VARCHAR} and is_deleted=0
         limit 1
     </select>
 
     <!--获取订单总数-->
     <select id="getTotalMallOrders" parameterType="map" resultType="int">
-        select count(*) from tb_newbee_mall_order
+        select count(*) from tb_mall_order
         <where>
             <if test="orderNo!=null and orderNo!=''">
                 and order_no = #{orderNo}
@@ -146,7 +146,7 @@
     <select id="findMallOrderList" parameterType="map" resultMap="BaseResultMap">
         select
         *
-        from tb_newbee_mall_order
+        from tb_mall_order
         <where>
             <if test="orderNo!=null and orderNo!=''">
                 and order_no = #{orderNo}
@@ -178,7 +178,7 @@
 
     <!--取消订单-->
     <update id="closeOrder">
-        update tb_newbee_mall_order
+        update tb_mall_order
         set order_status = #{orderStatus},update_time = now()
         where order_id in
         <foreach collection="orderIds" item="item" index="index"
@@ -188,7 +188,7 @@
 
     <!--确认订单，更新订单-->
     <update id="updateByPrimaryKeySelective" parameterType="com.moshui.mall.entity.MallOrder">
-        update tb_newbee_mall_order
+        update tb_mall_order
         <set>
             <if test="orderNo != null">
                 order_no = #{orderNo,jdbcType=VARCHAR},
@@ -234,14 +234,14 @@
     <select id="selectByPrimaryKey" parameterType="long" resultMap="BaseResultMap">
         select
         *
-        from tb_newbee_mall_order
+        from tb_mall_order
         where order_id = #{orderId,jdbcType=BIGINT}
     </select>
 
     <select id="selectByPrimaryKeys" resultMap="BaseResultMap">
         select
         *
-        from tb_newbee_mall_order
+        from tb_mall_order
         where order_id in
         <foreach collection="orderIds" item="item" index="index"
                  open="(" separator="," close=")">#{item}
@@ -249,7 +249,7 @@
     </select>
 
     <update id="checkDone">
-        update tb_newbee_mall_order
+        update tb_mall_order
         set order_status = 2,update_time = now()
         where order_id in
         <foreach collection="orderIds" item="item" index="index"
@@ -258,7 +258,7 @@
     </update>
 
     <update id="checkOut">
-        update tb_newbee_mall_order
+        update tb_mall_order
         set order_status = 3,update_time = now()
         where order_id in
         <foreach collection="orderIds" item="item" index="index"

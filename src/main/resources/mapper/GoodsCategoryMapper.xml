@@ -19,7 +19,7 @@
         select
         *
         from
-        tb_newbee_mall_goods_category
+        tb_mall_goods_category
         <where>
             <if test="categoryLevel != null and categoryLevel != ''">
                 and category_level = #{categoryLevel}
@@ -38,7 +38,7 @@
     <!--查询总数-->
     <select id="getTotalGoodsCategories" resultType="int" parameterType="Map">
         select count(*)
-        from tb_newbee_mall_goods_category
+        from tb_mall_goods_category
         <where>
             <if test="categoryLevel != null and categoryLevel != ''">
                 and category_level = #{categoryLevel}
@@ -53,7 +53,7 @@
     <!--根据分类级别和分类名称查询-->
     <select id="selectByLevelAndName" resultMap="BaseResultMap">
         select *
-        from tb_newbee_mall_goods_category
+        from tb_mall_goods_category
         where
             category_level = #{categoryLevel} and
             category_name = #{categoryName} and
@@ -63,7 +63,7 @@
 
     <!--批量删除-->
     <update id="delete">
-        update tb_newbee_mall_goods_category
+        update tb_mall_goods_category
         set is_deleted = 1, update_time = now()
         where category_id in
         <foreach collection="array" item="id" open="(" separator="," close=")">
@@ -73,7 +73,7 @@
 
     <!--添加-->
     <insert id="insert" parameterType="com.moshui.mall.entity.GoodsCategory">
-        insert into tb_newbee_mall_goods_category
+        insert into tb_mall_goods_category
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="categoryId != null">
                 category_id,
@@ -142,7 +142,7 @@
 
     <!--修改-->
     <update id="update" parameterType="com.moshui.mall.entity.GoodsCategory">
-        update tb_newbee_mall_goods_category
+        update tb_mall_goods_category
         <set>
             <if test="categoryLevel != null">
                 category_level = #{categoryLevel,jdbcType=TINYINT},
@@ -178,7 +178,7 @@
     <!--根据id查询-->
     <select id="selectByPrimaryKey" parameterType="long" resultMap="BaseResultMap">
         select *
-        from tb_newbee_mall_goods_category
+        from tb_mall_goods_category
         where
             category_id = #{categoryId} and
             is_deleted = 0
@@ -187,7 +187,7 @@
     <!--根据parentId和level获取分类列表，number为0时表示查询所有-->
     <select id="selectByLevelAndParentIdsAndNumber" resultMap="BaseResultMap">
         select *
-        from tb_newbee_mall_goods_category
+        from tb_mall_goods_category
         where
             parent_id in
             <foreach collection="parentIds" item="parentId" open="(" separator="," close=")">

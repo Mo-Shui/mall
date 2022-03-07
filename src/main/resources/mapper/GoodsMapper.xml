@@ -32,7 +32,7 @@
 
     <!--添加商品-->
     <insert id="insertSelective" parameterType="com.moshui.mall.entity.Goods">
-        insert into tb_newbee_mall_goods_info
+        insert into tb_mall_goods_info
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="goodsId != null">
                 goods_id,
@@ -141,13 +141,13 @@
         <include refid="Base_Column_List"/>
         ,
         <include refid="Blob_Column_List"/>
-        from tb_newbee_mall_goods_info
+        from tb_mall_goods_info
         where goods_id = #{goodsId,jdbcType=BIGINT}
     </select>
 
     <!--修改商品-->
     <update id="updateByPrimaryKeySelective" parameterType="com.moshui.mall.entity.Goods">
-        update tb_newbee_mall_goods_info
+        update tb_mall_goods_info
         <set>
             <if test="goodsName != null">
                 goods_name = #{goodsName,jdbcType=VARCHAR},
@@ -203,7 +203,7 @@
         select
         *
         from
-        tb_newbee_mall_goods_info
+        tb_mall_goods_info
         order by goods_id desc
         <if test="start != null and limit != null">
             limit #{start},#{limit}
@@ -213,12 +213,12 @@
     <!--获取商品总数-->
     <select id="getTotalMallGoods" parameterType="map" resultType="int">
         select count(*)
-        from tb_newbee_mall_goods_info
+        from tb_mall_goods_info
     </select>
 
     <!--批量修改销售状态-->
     <update id="batchUpdateSellStatus">
-        update tb_newbee_mall_goods_info
+        update tb_mall_goods_info
         set goods_sell_status = #{sellStatus}, update_time = now()
         where goods_id in
         <foreach collection="ids" item="id" open="(" separator="," close=")">
@@ -231,7 +231,7 @@
         select
         *
         from
-        tb_newbee_mall_goods_info
+        tb_mall_goods_info
         where goods_id in
         <foreach item="id" collection="goodsIds" open="(" separator="," close=")">
             #{id}
@@ -248,7 +248,7 @@
         select
         *
         from
-        tb_newbee_mall_goods_info
+        tb_mall_goods_info
         <where>
             <if test="keyword!=null and keyword!=''">
                 and (goods_name like CONCAT('%',#{keyword},'%') or goods_intro like CONCAT('%',#{keyword},'%'))
@@ -283,7 +283,7 @@
 
     <!--根据搜索获取总数-->
     <select id="getTotalMallGoodsBySearch" parameterType="map" resultType="int">
-        select count(*) from tb_newbee_mall_goods_info
+        select count(*) from tb_mall_goods_info
         <where>
             <if test="keyword!=null and keyword!=''">
                 and (goods_name like CONCAT('%',#{keyword},'%') or goods_intro like CONCAT('%',#{keyword},'%'))
@@ -300,7 +300,7 @@
     <!--修改库存-->
     <update id="updateStockNum">
         <foreach collection="stockNumDTOS" item="stockNumDTO">
-            update tb_newbee_mall_goods_info set stock_num = stock_num-#{stockNumDTO.goodsCount}
+            update tb_mall_goods_info set stock_num = stock_num-#{stockNumDTO.goodsCount}
             where goods_id = #{stockNumDTO.goodsId} and stock_num>=#{stockNumDTO.goodsCount} and goods_sell_status = 0;
         </foreach>
     </update>

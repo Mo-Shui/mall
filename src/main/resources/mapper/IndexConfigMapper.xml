@@ -20,7 +20,7 @@
         select
             *
         from
-             tb_newbee_mall_index_config
+             tb_mall_index_config
         <where>
             <if test="configType!=null and configType!=''">
                 and config_type = #{configType}
@@ -38,7 +38,7 @@
         select
             count(*)
         from
-            tb_newbee_mall_index_config
+            tb_mall_index_config
         <where>
             <if test="configType!=null and configType!=''">
                 and config_type = #{configType}
@@ -49,7 +49,7 @@
 
     <!--添加-->
     <insert id="insertSelective" parameterType="com.moshui.mall.entity.IndexConfig">
-        insert into tb_newbee_mall_index_config
+        insert into tb_mall_index_config
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="configId != null">
                 config_id,
@@ -127,14 +127,14 @@
         select
             *
         from
-            tb_newbee_mall_index_config
+            tb_mall_index_config
         where
             config_id = #{value} and is_deleted = 0
     </select>
 
     <!--修改-->
     <update id="updateByPrimaryKeySelective" parameterType="com.moshui.mall.entity.IndexConfig">
-        update tb_newbee_mall_index_config
+        update tb_mall_index_config
         <set>
             <if test="configName != null">
                 config_name = #{configName,jdbcType=VARCHAR},
@@ -172,7 +172,7 @@
 
     <!--删除-->
     <update id="deleteBatch">
-        update tb_newbee_mall_index_config
+        update tb_mall_index_config
         set is_deleted=1,update_time=now() where is_deleted=0 and config_id in
         <foreach item="id" collection="ids" open="(" separator="," close=")">
             #{id}
@@ -184,7 +184,7 @@
         select
             *
         from
-            tb_newbee_mall_index_config
+            tb_mall_index_config
         where config_type = #{configType} and is_deleted = 0
         order by config_rank desc
         limit #{number}

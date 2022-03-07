@@ -51,7 +51,7 @@ public class ShoppingCartController {
                 itemsTotal += mallShoppingCartItemVO.getGoodsCount();
             }
             if (itemsTotal < 1){
-                return "/error/error_5xx";
+                return "error/error_5xx";
             }
 
             //统计总价
@@ -59,14 +59,14 @@ public class ShoppingCartController {
                 priceTotal += mallShoppingCartItemVO.getGoodsCount() * mallShoppingCartItemVO.getSellingPrice();
             }
             if (priceTotal < 1){
-                return "/error/error_5xx";
+                return "error/error_5xx";
             }
         }
 
         request.setAttribute("itemsTotal", itemsTotal);
         request.setAttribute("priceTotal", priceTotal);
         request.setAttribute("myShoppingCartItems", mallShoppingCartItemVOS);
-        return "/mall/cart";
+        return "mall/cart";
     }
 
     //修改
@@ -84,10 +84,9 @@ public class ShoppingCartController {
     }
 
     //删除
-    @DeleteMapping("/shop-cart/{newBeeMallShoppingCartItemId}")
+    @DeleteMapping("/shop-cart/{mallShoppingCartItemId}")
     @ResponseBody
-    public Result updateMallShoppingCartItem(@PathVariable("newBeeMallShoppingCartItemId") Long mallShoppingCartItemId,
-                                             HttpSession httpSession){
+    public Result updateMallShoppingCartItem(@PathVariable("mallShoppingCartItemId") Long mallShoppingCartItemId){
         Boolean deleteResult = mallShoppingCartService.deleteById(mallShoppingCartItemId);
         //删除成功
         if (deleteResult) {
@@ -105,19 +104,19 @@ public class ShoppingCartController {
 
         List<MallShoppingCartItemVO> myShoppingCartItems = mallShoppingCartService.getMyShoppingCartItems(user.getUserId());
         if (myShoppingCartItems == null || myShoppingCartItems.size() <= 0){
-            return "/shop-cart";
+            return "shop-cart";
         }else{
             for (MallShoppingCartItemVO myShoppingCartItem : myShoppingCartItems) {
                 priceTotal += myShoppingCartItem.getGoodsCount() * myShoppingCartItem.getSellingPrice();
             }
             if (priceTotal < 1){
-                return "/error/error_5xx";
+                return "error/error_5xx";
             }
         }
 
         request.setAttribute("priceTotal", priceTotal);
         request.setAttribute("myShoppingCartItems", myShoppingCartItems);
-        return "/mall/order-settle";
+        return "mall/order-settle";
     }
 
 }

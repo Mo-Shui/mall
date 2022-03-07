@@ -25,13 +25,13 @@ public class PersonalController {
     //登录页面跳转
     @GetMapping({"/login", "login.html"})
     public String loginPage() {
-        return "/mall/login";
+        return "mall/login";
     }
 
     //注册页面跳转
     @GetMapping({"/register", "register.html"})
     public String registerPage() {
-        return "/mall/register";
+        return "mall/register";
     }
 
     //登录
@@ -96,15 +96,14 @@ public class PersonalController {
     @RequestMapping("/logout")
     public String logout(HttpSession session){
         session.removeAttribute(Constants.MALL_USER_SESSION_KEY);
-        return "/mall/login";
+        return "mall/login";
     }
 
     //个人中心
     @GetMapping("/personal")
-    public String personalPage(HttpServletRequest request,
-                               HttpSession httpSession) {
+    public String personalPage(HttpServletRequest request) {
         request.setAttribute("path", "personal");
-        return "/mall/personal";
+        return "mall/personal";
     }
 
     //用户信息修改并返回最新的用户信息

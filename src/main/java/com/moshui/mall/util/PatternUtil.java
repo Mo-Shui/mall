@@ -3,14 +3,7 @@ package com.moshui.mall.util;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * 正则工具类
- *
- * @author 13
- * @qq交流群 796794009
- * @email 2449207463@qq.com
- * @link https://github.com/newbee-ltd
- */
+//正则工具类
 public class PatternUtil {
 
     /**

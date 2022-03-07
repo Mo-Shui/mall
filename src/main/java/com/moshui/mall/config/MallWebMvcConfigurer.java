@@ -33,11 +33,6 @@ public class MallWebMvcConfigurer implements WebMvcConfigurer {
                 .excludePathPatterns("/admin/plugins/**");
         // 商城页面登录拦截
         registry.addInterceptor(mallLoginInterceptor)
-                .excludePathPatterns("/admin/**")
-                .excludePathPatterns("/register")
-                .excludePathPatterns("/login")
-                .excludePathPatterns("/logout")
-                .excludePathPatterns("/mall/**")
                 .addPathPatterns("/goods/detail/**")
                 .addPathPatterns("/shop-cart")
                 .addPathPatterns("/shop-cart/**")
@@ -47,7 +42,17 @@ public class MallWebMvcConfigurer implements WebMvcConfigurer {
                 .addPathPatterns("/personal")
                 .addPathPatterns("/personal/updateInfo")
                 .addPathPatterns("/selectPayType")
-                .addPathPatterns("/payPage");
+                .addPathPatterns("/payPage")
+                .excludePathPatterns("/admin/**")
+                .excludePathPatterns("/register")
+                .excludePathPatterns("/login")
+                .excludePathPatterns("/logout")
+                .excludePathPatterns("/mall/**")
+                .excludePathPatterns("/mall/css/**")
+                .excludePathPatterns("/mall/fonts/**")
+                .excludePathPatterns("/mall/image/**")
+                .excludePathPatterns("/mall/js/**")
+                .excludePathPatterns("/mall/styles/**");
         // 购物车中的数量统一处理
         registry.addInterceptor(mallCartNumberInterceptor)
                 .excludePathPatterns("/admin/**")

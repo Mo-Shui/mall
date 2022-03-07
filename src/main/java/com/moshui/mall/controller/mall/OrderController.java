@@ -62,7 +62,7 @@ public class OrderController {
             return "error/error_5xx";
         }
         request.setAttribute("orderDetailVO", mallOrderDetailVO);
-        return "/mall/order-detail";
+        return "mall/order-detail";
     }
 
     //个人中心订单列表
@@ -81,7 +81,7 @@ public class OrderController {
         request.setAttribute("path","orders");
         request.setAttribute("orderPageResult",mallOrderService.getMyOrders(pageQueryUtil));
 
-        return "/mall/my-orders";
+        return "mall/my-orders";
     }
 
     //取消订单
@@ -114,17 +114,17 @@ public class OrderController {
     @GetMapping("/selectPayType")
     public String selectPayType(HttpServletRequest request, @RequestParam("orderNo") String orderNo, HttpSession httpSession) {
         MallUserVO user = (MallUserVO) httpSession.getAttribute(Constants.MALL_USER_SESSION_KEY);
-        MallOrder newBeeMallOrder = mallOrderService.getMallOrderByOrderNo(orderNo);
+        MallOrder mallOrder = mallOrderService.getMallOrderByOrderNo(orderNo);
         //判断订单userId
-        if (!user.getUserId().equals(newBeeMallOrder.getUserId())) {
+        if (!user.getUserId().equals(mallOrder.getUserId())) {
             MallException.fail(ServiceResultEnum.NO_PERMISSION_ERROR.getResult());
         }
         //判断订单状态
-        if (newBeeMallOrder.getOrderStatus().intValue() != MallOrderStatusEnum.ORDER_PRE_PAY.getOrderStatus()) {
+        if (mallOrder.getOrderStatus().intValue() != MallOrderStatusEnum.ORDER_PRE_PAY.getOrderStatus()) {
             MallException.fail(ServiceResultEnum.ORDER_STATUS_ERROR.getResult());
         }
         request.setAttribute("orderNo", orderNo);
-        request.setAttribute("totalPrice", newBeeMallOrder.getTotalPrice());
+        request.setAttribute("totalPrice", mallOrder.getTotalPrice());
         return "mall/pay-select";
     }
 
@@ -132,17 +132,17 @@ public class OrderController {
     @GetMapping("/payPage")
     public String payOrder(HttpServletRequest request, @RequestParam("orderNo") String orderNo, HttpSession httpSession, @RequestParam("payType") int payType) {
         MallUserVO user = (MallUserVO) httpSession.getAttribute(Constants.MALL_USER_SESSION_KEY);
-        MallOrder newBeeMallOrder = mallOrderService.getMallOrderByOrderNo(orderNo);
+        MallOrder mallOrder = mallOrderService.getMallOrderByOrderNo(orderNo);
         //判断订单userId
-        if (!user.getUserId().equals(newBeeMallOrder.getUserId())) {
+        if (!user.getUserId().equals(mallOrder.getUserId())) {
             MallException.fail(ServiceResultEnum.NO_PERMISSION_ERROR.getResult());
         }
         //判断订单状态
-        if (newBeeMallOrder.getOrderStatus().intValue() != MallOrderStatusEnum.ORDER_PRE_PAY.getOrderStatus()) {
+        if (mallOrder.getOrderStatus().intValue() != MallOrderStatusEnum.ORDER_PRE_PAY.getOrderStatus()) {
             MallException.fail(ServiceResultEnum.ORDER_STATUS_ERROR.getResult());
         }
         request.setAttribute("orderNo", orderNo);
-        request.setAttribute("totalPrice", newBeeMallOrder.getTotalPrice());
+        request.setAttribute("totalPrice", mallOrder.getTotalPrice());
         if (payType == 1) {
             return "mall/alipay";
         } else {

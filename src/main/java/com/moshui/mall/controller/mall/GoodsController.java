@@ -65,7 +65,7 @@ public class GoodsController {
         PageQueryUtil pageQueryUtil = new PageQueryUtil(params);
         request.setAttribute("pageResult", mallGoodsService.searchMallGoods(pageQueryUtil));
 
-        return "/mall/search";
+        return "mall/search";
     }
 
     //获取商品的详细信息
@@ -84,7 +84,7 @@ public class GoodsController {
         BeanUtil.copyProperties(goods, goodsDetailVO);
         goodsDetailVO.setGoodsCarouselList(goods.getGoodsCarousel().split(","));
         request.setAttribute("goodsDetail", goodsDetailVO);
-        return "/mall/detail";
+        return "mall/detail";
     }
 
 }

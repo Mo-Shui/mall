@@ -37,7 +37,7 @@ public class MallGoodsCategoryController {
         request.setAttribute("parentId",parentId);
         request.setAttribute("backParentId",backParentId);
 
-        return "/admin/mall_category";
+        return "admin/mall_category";
     }
 
     //列表
@@ -122,7 +122,7 @@ public class MallGoodsCategoryController {
             }
         }
 
-        return "/error/error_5xx";
+        return "error/error_5xx";
     }
 
     //更改三级联动时调用

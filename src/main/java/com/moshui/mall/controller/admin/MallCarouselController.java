@@ -25,7 +25,7 @@ public class MallCarouselController {
     @GetMapping("carousels")
     public String carousels(HttpServletRequest request){
         request.setAttribute("path","mall_carousels");
-        return "/admin/mall_carousel";
+        return "admin/mall_carousel";
     }
 
     //列表

@@ -156,9 +156,9 @@ public class MallOrderServiceImpl implements MallOrderService {
         MallOrderDetailVO mallOrderDetailVO = new MallOrderDetailVO();
         BeanUtil.copyProperties(mallOrder,mallOrderDetailVO);
 
-        mallOrderDetailVO.setOrderStatusString(MallOrderStatusEnum.getNewBeeMallOrderStatusEnumByStatus(mallOrderDetailVO.getOrderStatus()).getName());
+        mallOrderDetailVO.setOrderStatusString(MallOrderStatusEnum.getMallOrderStatusEnumByStatus(mallOrderDetailVO.getOrderStatus()).getName());
         mallOrderDetailVO.setPayTypeString(PayTypeEnum.getPayTypeEnumByType(mallOrderDetailVO.getPayType()).getName());
-        mallOrderDetailVO.setNewBeeMallOrderItemVOS(mallOrderItemVOS);
+        mallOrderDetailVO.setMallOrderItemVOS(mallOrderItemVOS);
         return mallOrderDetailVO;
     }
 
@@ -174,7 +174,7 @@ public class MallOrderServiceImpl implements MallOrderService {
 
             //设置订单状态中文显示值
             for (MallOrderListVO mallOrderListVO : mallOrderListVOS) {
-                mallOrderListVO.setOrderStatusString(MallOrderStatusEnum.getNewBeeMallOrderStatusEnumByStatus(mallOrderListVO.getOrderStatus()).getName());
+                mallOrderListVO.setOrderStatusString(MallOrderStatusEnum.getMallOrderStatusEnumByStatus(mallOrderListVO.getOrderStatus()).getName());
             }
 
             List<Long> orderIds = new ArrayList<>();
@@ -200,7 +200,7 @@ public class MallOrderServiceImpl implements MallOrderService {
                     if (orderItemsMap.containsKey(mallOrderListVO.getOrderId())){
                         List<MallOrderItem> orderItems = orderItemsMap.get(mallOrderListVO.getOrderId());
                         List<MallOrderItemVO> mallOrderItemVOS = BeanUtil.copyList(orderItems,MallOrderItemVO.class);
-                        mallOrderListVO.setNewBeeMallOrderItemVOS(mallOrderItemVOS);
+                        mallOrderListVO.setMallOrderItemVOS(mallOrderItemVOS);
                     }
                 }
             }
@@ -213,20 +213,20 @@ public class MallOrderServiceImpl implements MallOrderService {
     //取消订单
     @Override
     public String cancelOrder(String orderNo, Long userId) {
-        MallOrder newBeeMallOrder = mallOrderMapper.selectByOrderNo(orderNo);
-        if (newBeeMallOrder != null) {
+        MallOrder mallOrder = mallOrderMapper.selectByOrderNo(orderNo);
+        if (mallOrder != null) {
             //验证是否是当前userId下的订单，否则报错
-            if (!userId.equals(newBeeMallOrder.getUserId())) {
+            if (!userId.equals(mallOrder.getUserId())) {
                 MallException.fail(ServiceResultEnum.NO_PERMISSION_ERROR.getResult());
             }
             //订单状态判断
-            if (newBeeMallOrder.getOrderStatus().intValue() == MallOrderStatusEnum.ORDER_SUCCESS.getOrderStatus()
-                    || newBeeMallOrder.getOrderStatus().intValue() == MallOrderStatusEnum.ORDER_CLOSED_BY_MALLUSER.getOrderStatus()
-                    || newBeeMallOrder.getOrderStatus().intValue() == MallOrderStatusEnum.ORDER_CLOSED_BY_EXPIRED.getOrderStatus()
-                    || newBeeMallOrder.getOrderStatus().intValue() == MallOrderStatusEnum.ORDER_CLOSED_BY_JUDGE.getOrderStatus()) {
+            if (mallOrder.getOrderStatus().intValue() == MallOrderStatusEnum.ORDER_SUCCESS.getOrderStatus()
+                    || mallOrder.getOrderStatus().intValue() == MallOrderStatusEnum.ORDER_CLOSED_BY_MALLUSER.getOrderStatus()
+                    || mallOrder.getOrderStatus().intValue() == MallOrderStatusEnum.ORDER_CLOSED_BY_EXPIRED.getOrderStatus()
+                    || mallOrder.getOrderStatus().intValue() == MallOrderStatusEnum.ORDER_CLOSED_BY_JUDGE.getOrderStatus()) {
                 return ServiceResultEnum.ORDER_STATUS_ERROR.getResult();
             }
-            if (mallOrderMapper.closeOrder(Collections.singletonList(newBeeMallOrder.getOrderId()), MallOrderStatusEnum.ORDER_CLOSED_BY_MALLUSER.getOrderStatus()) > 0) {
+            if (mallOrderMapper.closeOrder(Collections.singletonList(mallOrder.getOrderId()), MallOrderStatusEnum.ORDER_CLOSED_BY_MALLUSER.getOrderStatus()) > 0) {
                 return ServiceResultEnum.SUCCESS.getResult();
             } else {
                 return ServiceResultEnum.DB_ERROR.getResult();
@@ -238,19 +238,19 @@ public class MallOrderServiceImpl implements MallOrderService {
     //确认订单
     @Override
     public String finishOrder(String orderNo, Long userId) {
-        MallOrder newBeeMallOrder = mallOrderMapper.selectByOrderNo(orderNo);
-        if (newBeeMallOrder != null) {
+        MallOrder mallOrder = mallOrderMapper.selectByOrderNo(orderNo);
+        if (mallOrder != null) {
             //验证是否是当前userId下的订单，否则报错
-            if (!userId.equals(newBeeMallOrder.getUserId())) {
+            if (!userId.equals(mallOrder.getUserId())) {
                 return ServiceResultEnum.NO_PERMISSION_ERROR.getResult();
             }
             //订单状态判断 非出库状态下不进行修改操作
-            if (newBeeMallOrder.getOrderStatus().intValue() != MallOrderStatusEnum.ORDER_EXPRESS.getOrderStatus()) {
+            if (mallOrder.getOrderStatus().intValue() != MallOrderStatusEnum.ORDER_EXPRESS.getOrderStatus()) {
                 return ServiceResultEnum.ORDER_STATUS_ERROR.getResult();
             }
-            newBeeMallOrder.setOrderStatus((byte) MallOrderStatusEnum.ORDER_SUCCESS.getOrderStatus());
-            newBeeMallOrder.setUpdateTime(new Date());
-            if (mallOrderMapper.updateByPrimaryKeySelective(newBeeMallOrder) > 0) {
+            mallOrder.setOrderStatus((byte) MallOrderStatusEnum.ORDER_SUCCESS.getOrderStatus());
+            mallOrder.setUpdateTime(new Date());
+            if (mallOrderMapper.updateByPrimaryKeySelective(mallOrder) > 0) {
                 return ServiceResultEnum.SUCCESS.getResult();
             } else {
                 return ServiceResultEnum.DB_ERROR.getResult();
@@ -268,18 +268,18 @@ public class MallOrderServiceImpl implements MallOrderService {
     //支付成功
     @Override
     public String paySuccess(String orderNo, int payType) {
-        MallOrder newBeeMallOrder = mallOrderMapper.selectByOrderNo(orderNo);
-        if (newBeeMallOrder != null) {
+        MallOrder mallOrder = mallOrderMapper.selectByOrderNo(orderNo);
+        if (mallOrder != null) {
             //订单状态判断 非待支付状态下不进行修改操作
-            if (newBeeMallOrder.getOrderStatus().intValue() != MallOrderStatusEnum.ORDER_PRE_PAY.getOrderStatus()) {
+            if (mallOrder.getOrderStatus().intValue() != MallOrderStatusEnum.ORDER_PRE_PAY.getOrderStatus()) {
                 return ServiceResultEnum.ORDER_STATUS_ERROR.getResult();
             }
-            newBeeMallOrder.setOrderStatus((byte) MallOrderStatusEnum.ORDER_PAID.getOrderStatus());
-            newBeeMallOrder.setPayType((byte) payType);
-            newBeeMallOrder.setPayStatus((byte) PayStatusEnum.PAY_SUCCESS.getPayStatus());
-            newBeeMallOrder.setPayTime(new Date());
-            newBeeMallOrder.setUpdateTime(new Date());
-            if (mallOrderMapper.updateByPrimaryKeySelective(newBeeMallOrder) > 0) {
+            mallOrder.setOrderStatus((byte) MallOrderStatusEnum.ORDER_PAID.getOrderStatus());
+            mallOrder.setPayType((byte) payType);
+            mallOrder.setPayStatus((byte) PayStatusEnum.PAY_SUCCESS.getPayStatus());
+            mallOrder.setPayTime(new Date());
+            mallOrder.setUpdateTime(new Date());
+            if (mallOrderMapper.updateByPrimaryKeySelective(mallOrder) > 0) {
                 return ServiceResultEnum.SUCCESS.getResult();
             } else {
                 return ServiceResultEnum.DB_ERROR.getResult();
@@ -291,9 +291,9 @@ public class MallOrderServiceImpl implements MallOrderService {
     //后台分页
     @Override
     public PageResult getMallOrdersPage(PageQueryUtil pageUtil) {
-        List<MallOrder> newBeeMallOrders = mallOrderMapper.findMallOrderList(pageUtil);
+        List<MallOrder> mallOrders = mallOrderMapper.findMallOrderList(pageUtil);
         int total = mallOrderMapper.getTotalMallOrders(pageUtil);
-        PageResult pageResult = new PageResult(newBeeMallOrders, total, pageUtil.getLimit(), pageUtil.getPage());
+        PageResult pageResult = new PageResult(mallOrders, total, pageUtil.getLimit(), pageUtil.getPage());
         return pageResult;
     }
 
@@ -317,13 +317,13 @@ public class MallOrderServiceImpl implements MallOrderService {
     //获取订单项
     @Override
     public List<MallOrderItemVO> getOrderItems(Long id) {
-        MallOrder newBeeMallOrder = mallOrderMapper.selectByPrimaryKey(id);
-        if (newBeeMallOrder != null) {
-            List<MallOrderItem> orderItems = mallOrderItemMapper.selectByOrderId(newBeeMallOrder.getOrderId());
+        MallOrder mallOrder = mallOrderMapper.selectByPrimaryKey(id);
+        if (mallOrder != null) {
+            List<MallOrderItem> orderItems = mallOrderItemMapper.selectByOrderId(mallOrder.getOrderId());
             //获取订单项数据
             if (!CollectionUtils.isEmpty(orderItems)) {
-                List<MallOrderItemVO> newBeeMallOrderItemVOS = BeanUtil.copyList(orderItems, MallOrderItemVO.class);
-                return newBeeMallOrderItemVOS;
+                List<MallOrderItemVO> mallOrderItemVOS = BeanUtil.copyList(orderItems, MallOrderItemVO.class);
+                return mallOrderItemVOS;
             }
         }
         return null;
@@ -335,13 +335,13 @@ public class MallOrderServiceImpl implements MallOrderService {
         List<MallOrder> orders = mallOrderMapper.selectByPrimaryKeys(Arrays.asList(ids));
         String errorOrderNos = "";
         if (!CollectionUtils.isEmpty(orders)) {
-            for (MallOrder newBeeMallOrder : orders) {
-                if (newBeeMallOrder.getIsDeleted() == 1) {
-                    errorOrderNos += newBeeMallOrder.getOrderNo() + " ";
+            for (MallOrder mallOrder : orders) {
+                if (mallOrder.getIsDeleted() == 1) {
+                    errorOrderNos += mallOrder.getOrderNo() + " ";
                     continue;
                 }
-                if (newBeeMallOrder.getOrderStatus() != 1) {
-                    errorOrderNos += newBeeMallOrder.getOrderNo() + " ";
+                if (mallOrder.getOrderStatus() != 1) {
+                    errorOrderNos += mallOrder.getOrderNo() + " ";
                 }
             }
             if (StringUtils.isEmpty(errorOrderNos)) {
@@ -370,13 +370,13 @@ public class MallOrderServiceImpl implements MallOrderService {
         List<MallOrder> orders = mallOrderMapper.selectByPrimaryKeys(Arrays.asList(ids));
         String errorOrderNos = "";
         if (!CollectionUtils.isEmpty(orders)) {
-            for (MallOrder newBeeMallOrder : orders) {
-                if (newBeeMallOrder.getIsDeleted() == 1) {
-                    errorOrderNos += newBeeMallOrder.getOrderNo() + " ";
+            for (MallOrder mallOrder : orders) {
+                if (mallOrder.getIsDeleted() == 1) {
+                    errorOrderNos += mallOrder.getOrderNo() + " ";
                     continue;
                 }
-                if (newBeeMallOrder.getOrderStatus() != 1 && newBeeMallOrder.getOrderStatus() != 2) {
-                    errorOrderNos += newBeeMallOrder.getOrderNo() + " ";
+                if (mallOrder.getOrderStatus() != 1 && mallOrder.getOrderStatus() != 2) {
+                    errorOrderNos += mallOrder.getOrderNo() + " ";
                 }
             }
             if (StringUtils.isEmpty(errorOrderNos)) {
@@ -405,15 +405,15 @@ public class MallOrderServiceImpl implements MallOrderService {
         List<MallOrder> orders = mallOrderMapper.selectByPrimaryKeys(Arrays.asList(ids));
         String errorOrderNos = "";
         if (!CollectionUtils.isEmpty(orders)) {
-            for (MallOrder newBeeMallOrder : orders) {
+            for (MallOrder mallOrder : orders) {
                 // isDeleted=1 一定为已关闭订单
-                if (newBeeMallOrder.getIsDeleted() == 1) {
-                    errorOrderNos += newBeeMallOrder.getOrderNo() + " ";
+                if (mallOrder.getIsDeleted() == 1) {
+                    errorOrderNos += mallOrder.getOrderNo() + " ";
                     continue;
                 }
                 //已关闭或者已完成无法关闭订单
-                if (newBeeMallOrder.getOrderStatus() == 4 || newBeeMallOrder.getOrderStatus() < 0) {
-                    errorOrderNos += newBeeMallOrder.getOrderNo() + " ";
+                if (mallOrder.getOrderStatus() == 4 || mallOrder.getOrderStatus() < 0) {
+                    errorOrderNos += mallOrder.getOrderNo() + " ";
                 }
             }
             if (StringUtils.isEmpty(errorOrderNos)) {

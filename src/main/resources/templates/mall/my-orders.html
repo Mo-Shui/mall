@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="mall/header::head-fragment('NewBee商城-订单列表','my-orders')">
+<head th:replace="mall/header::head-fragment('商城-订单列表','my-orders')">
 </head>
 <body>
 <header th:replace="mall/header::header-fragment"></header>
@@ -71,7 +71,7 @@
                                                     <td class="order-items">
                                                         <ul class="goods-list">
                                                             <th:block
-                                                                    th:each="item : ${order.newBeeMallOrderItemVOS}">
+                                                                    th:each="item : ${order.mallOrderItemVOS}">
                                                                 <li>
                                                                     <div class="figure figure-thumb">
                                                                         <a target="_blank"
@@ -82,7 +82,7 @@
                                                                     </div>
                                                                     <p class="name"><a target="_blank"
                                                                                        th:href="@{'/goods/detail/'+${item.goodsId}}"
-                                                                                       th:text="${item.goodsName}">newbee</a>
+                                                                                       th:text="${item.goodsName}"></a>
                                                                     </p>
                                                                     <p class="price"
                                                                        th:text="${item.sellingPrice+'元 x '+item.goodsCount}">
@@ -104,7 +104,7 @@
                     </div>
                     <th:block th:unless="${#lists.isEmpty(orderPageResult.list)}">
                         <div id="J_orderListPages">
-                            <div class="newbee-pagenavi">
+                            <div class="pagenavi">
                                 <th:block th:if="${orderPageResult.currPage-2 >=1}"><a
                                         class="numbers"
                                         th:href="@{'/orders?page=' + ${orderPageResult.currPage-2}}"

@@ -24,7 +24,7 @@ public interface MallOrderMapper {
     int closeOrder(@Param("orderIds") List<Long> orderIds, @Param("orderStatus") int orderStatus);
 
     //确认订单，更新订单
-    int updateByPrimaryKeySelective(MallOrder newBeeMallOrder);
+    int updateByPrimaryKeySelective(MallOrder mallOrder);
 
     //根据id查询
     MallOrder selectByPrimaryKey(Long orderId);

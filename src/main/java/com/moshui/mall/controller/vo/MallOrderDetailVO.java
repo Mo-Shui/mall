@@ -18,7 +18,7 @@ public class MallOrderDetailVO implements Serializable {
     private String orderStatusString;
     private String userAddress;
     private Date createTime;
-    private List<MallOrderItemVO> newBeeMallOrderItemVOS;
+    private List<MallOrderItemVO> mallOrderItemVOS;
 
     public String getOrderNo() {
         return orderNo;
@@ -108,11 +108,11 @@ public class MallOrderDetailVO implements Serializable {
         this.orderStatusString = orderStatusString;
     }
 
-    public List<MallOrderItemVO> getNewBeeMallOrderItemVOS() {
-        return newBeeMallOrderItemVOS;
+    public List<MallOrderItemVO> getMallOrderItemVOS() {
+        return mallOrderItemVOS;
     }
 
-    public void setNewBeeMallOrderItemVOS(List<MallOrderItemVO> newBeeMallOrderItemVOS) {
-        this.newBeeMallOrderItemVOS = newBeeMallOrderItemVOS;
+    public void setMallOrderItemVOS(List<MallOrderItemVO> mallOrderItemVOS) {
+        this.mallOrderItemVOS = mallOrderItemVOS;
     }
 }

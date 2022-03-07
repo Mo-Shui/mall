@@ -23,7 +23,7 @@ public class MallOrderListVO implements Serializable {
 
     private Date createTime;
 
-    private List<MallOrderItemVO> newBeeMallOrderItemVOS;
+    private List<MallOrderItemVO> mallOrderItemVOS;
 
     public Long getOrderId() {
         return orderId;
@@ -89,11 +89,11 @@ public class MallOrderListVO implements Serializable {
         this.createTime = createTime;
     }
 
-    public List<MallOrderItemVO> getNewBeeMallOrderItemVOS() {
-        return newBeeMallOrderItemVOS;
+    public List<MallOrderItemVO> getMallOrderItemVOS() {
+        return mallOrderItemVOS;
     }
 
-    public void setNewBeeMallOrderItemVOS(List<MallOrderItemVO> newBeeMallOrderItemVOS) {
-        this.newBeeMallOrderItemVOS = newBeeMallOrderItemVOS;
+    public void setMallOrderItemVOS(List<MallOrderItemVO> mallOrderItemVOS) {
+        this.mallOrderItemVOS = mallOrderItemVOS;
     }
 }

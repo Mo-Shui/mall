@@ -34,7 +34,7 @@ public class MallGoodsIndexConfigController {
     public String indexConfigs(HttpServletRequest request, @RequestParam("configType") int configType){
         request.setAttribute("path", IndexConfigTypeEnum.getIndexConfigTypeEnumByType(configType));
         request.setAttribute("configType",configType);
-        return "/admin/mall_index_config";
+        return "admin/mall_index_config";
     }
 
     //列表

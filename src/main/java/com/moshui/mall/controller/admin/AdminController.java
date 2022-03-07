@@ -40,17 +40,17 @@ public class AdminController {
     public String login(String userName, String password, String verifyCode, HttpSession session){
         if (userName == null || userName.equals("") || password == null || password.equals("")){
             session.setAttribute("errorMsg","用户名或密码不能为空");
-            return "/admin/login";
+            return "admin/login";
         }
         if (verifyCode == null || verifyCode.equals("")){
             session.setAttribute("errorMsg","验证码不能为空");
-            return "/admin/login";
+            return "admin/login";
         }
 
         String sessionVerifyCode = (String) session.getAttribute("verifyCode");
         if (sessionVerifyCode == null || sessionVerifyCode.equals("") || !sessionVerifyCode.equals(verifyCode)){
             session.setAttribute("errorMsg","验证码错误");
-            return "/admin/login";
+            return "admin/login";
         }
 
         AdminUser adminUser = adminUserService.login(userName, password);
@@ -62,7 +62,7 @@ public class AdminController {
         }
 
         session.setAttribute("errorMsg","登录失败");
-        return "/admin/login";
+        return "admin/login";
     }
 
     //根据用户id获取用户信息
@@ -74,10 +74,10 @@ public class AdminController {
             request.setAttribute("path","profile");
             request.setAttribute("loginUserName",adminUser.getLoginUserName());
             request.setAttribute("nickName",adminUser.getNickName());
-            return "/admin/profile";
+            return "admin/profile";
         }
 
-        return "/admin/login";
+        return "admin/login";
     }
 
     //修改用户名
@@ -122,7 +122,7 @@ public class AdminController {
         session.removeAttribute("loginUser");
         session.removeAttribute("errorMsg");
 
-        return "/admin/login";
+        return "admin/login";
     }
 
 }

@@ -41,7 +41,7 @@ public class MallGoodsController {
     @RequestMapping("/goods")
     public String goods(HttpServletRequest request) {
         request.setAttribute("path", "mall_goods");
-        return "/admin/mall_goods";
+        return "admin/mall_goods";
     }
 
     //编辑商品信息页面
@@ -59,7 +59,7 @@ public class MallGoodsController {
                 request.setAttribute("secondLevelCategories", second);
                 request.setAttribute("thirdLevelCategories", third);
                 request.setAttribute("path", "goods-edit");
-                return "/admin/mall_goods_edit";
+                return "admin/mall_goods_edit";
             }
         }
 
@@ -73,7 +73,7 @@ public class MallGoodsController {
 
         Goods goods = mallGoodsService.getMallGoodsById(goodsId);
         if (goods == null) {
-            return "/error/error_400";
+            return "error/error_400";
         }
 
         //获取该商品的三级分类信息
@@ -121,7 +121,7 @@ public class MallGoodsController {
 
         request.setAttribute("goods",goods);
         request.setAttribute("path","goods-edit");
-        return "/admin/mall_goods_edit";
+        return "admin/mall_goods_edit";
     }
 
     //添加商品

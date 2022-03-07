@@ -86,11 +86,11 @@ public class MallUserServiceImpl implements MallUserService {
                 userFromDB.setIntroduceSign(MallUtils.cleanString(mallUser.getIntroduceSign()));
             }
             if (mallUserMapper.updateByPrimaryKeySelective(userFromDB) > 0) {
-                MallUserVO newBeeMallUserVO = new MallUserVO();
+                MallUserVO mallUserVO = new MallUserVO();
                 userFromDB = mallUserMapper.selectByPrimaryKey(mallUser.getUserId());
-                BeanUtil.copyProperties(userFromDB, newBeeMallUserVO);
-                httpSession.setAttribute(Constants.MALL_USER_SESSION_KEY, newBeeMallUserVO);
-                return newBeeMallUserVO;
+                BeanUtil.copyProperties(userFromDB, mallUserVO);
+                httpSession.setAttribute(Constants.MALL_USER_SESSION_KEY, mallUserVO);
+                return mallUserVO;
             }
         }
         return null;

@@ -14,19 +14,19 @@
         select
                *
         from
-             tb_newbee_mall_admin_user
+             tb_mall_admin_user
         where
             login_user_name = #{username} and login_password = #{password} and locked = 0
     </select>
 
     <!--根据用户id获取用户信息-->
     <select id="getUserDetailById" resultMap="BaseResultMap" parameterType="int">
-        select * from tb_newbee_mall_admin_user where admin_user_id = #{value}
+        select * from tb_mall_admin_user where admin_user_id = #{value}
     </select>
 
     <!--修改用户信息-->
     <update id="updateUserDetailByAdminUser" parameterType="com.moshui.mall.entity.AdminUser">
-        update tb_newbee_mall_admin_user
+        update tb_mall_admin_user
         <set>
             <if test="loginUserName != null">
                 login_user_name = #{loginUserName},

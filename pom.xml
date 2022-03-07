@@ -13,6 +13,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>mall</name>
 	<description>商城</description>
+	<packaging>jar</packaging>
 	<properties>
 		<java.version>8</java.version>
 	</properties>
